@@ -10,6 +10,8 @@ public class DES {
 
     // 测试
     public static void main(String args[]) throws Exception {
+        boolean bl =true;
+        System.out.println(bl);
         // 待加密内容
         String str = "123456";
         // 密码，长度要是8的倍数 密钥随意定
