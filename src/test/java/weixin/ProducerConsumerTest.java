@@ -2,6 +2,7 @@ package weixin;
 
 import org.junit.Test;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -20,22 +21,21 @@ public class ProducerConsumerTest {
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
+    public void shouldAnswerWithTrue() {
+        assertTrue(true);
 
     }
 
     @Test
     public void testG() {
-        ProducerConsumer pc = new ProducerConsumer();
+        ProducerConsumerFunction pc = new ProducerConsumerFunction();
         Supplier<Integer> result = pc.g(() -> 1);
         assert result.get() == 2;
     }
 
     @Test
     public void testProducerConsumerInner() {
-        ProducerConsumer pc = new ProducerConsumer();
+        ProducerConsumerFunction pc = new ProducerConsumerFunction();
         pc.producerConsumerInner(Runnable::run,
                 (Consumer<Consumer<Integer>>) producer -> {
                     producer.accept(1);
@@ -50,7 +50,7 @@ public class ProducerConsumerTest {
     @Test
     public void testProducerConsumerAbCls() {
 //        ProducerConsumer1 pc = new ProducerConsumer1();
-        new ProducerConsumer1<Integer>(Runnable::run) {
+        new ProducerConsumer<Integer>(Runnable::run) {
             @Override
             void produce() {
                 produceInner(1);
@@ -63,5 +63,15 @@ public class ProducerConsumerTest {
                 assert consumeInner() == 2;
             }
         }.start();
+    }
+
+    @Test
+    public void testProducerConsumerInner2() {
+        AtomicInteger expectI = new AtomicInteger();
+//        ProducerConsumer pc = new NumberProducerConsumer
+        new NumberProducerConsumer(Runnable::run, () -> 0, i -> {
+            assert i == expectI.getAndIncrement();
+        }).start();
+        assert expectI.get() == 10;
     }
 }
