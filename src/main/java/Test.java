@@ -1,4 +1,7 @@
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -37,6 +40,10 @@ class Test {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
+//        InputStream inputStream = new ByteArrayInputStream();
+//        inputStream.read()
+//        ByteArrayInputStream byteArrayInputStream = new
     }
 
     int calculateDaysBetweenDates(Date startDate, Date endDate) {
