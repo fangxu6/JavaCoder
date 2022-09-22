@@ -10,6 +10,11 @@ public class IdGenerator {
     public static IdGenerator getInstance() {
         return instance;
     }
+
+    public static String generateTransactionId() {
+        return 1 + "";
+    }
+
     public long getId() {
         return id.incrementAndGet();
     }
