@@ -4,10 +4,6 @@ package unicode;
  * @author fangxu
  * on date:2022/6/27
  */
-/**
- * @author hankun
- * @create 2017-06-27 14:24
- */
 public class unicode {
     /**
      * 字符串转换unicode
