@@ -2,6 +2,7 @@ package weixin;
 
 import org.junit.Test;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -71,7 +72,17 @@ public class ProducerConsumerTest {
 //        ProducerConsumer pc = new NumberProducerConsumer
         new NumberProducerConsumer(Runnable::run, () -> 0, i -> {
             assert i == expectI.getAndIncrement();
-        }).start();
+        });
         assert expectI.get() == 10;
+    }
+
+    @Test
+    public void testExecutor(){
+        Executor executor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+
+            }
+        };
     }
 }
