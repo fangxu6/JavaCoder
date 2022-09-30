@@ -35,11 +35,11 @@ public class NumberProducerConsumer extends ProducerConsumer<Integer> {
         }
     }
 
-    public void producerConsumer() {
-        new NumberProducerConsumer(Executors.newFixedThreadPool(2),
-                () -> ThreadLocalRandom.current().nextInt(100),
-                System.out::println).start();
-    }
+//    public void producerConsumer() {
+//        new NumberProducerConsumer(Executors.newFixedThreadPool(2),
+//                () -> ThreadLocalRandom.current().nextInt(100),
+//                System.out::println).start();
+//    }
 
     public static void main(String[] args) {
         NumberProducerConsumer pc = new NumberProducerConsumer(Runnable::run, () -> 0, i -> {

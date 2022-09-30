@@ -113,6 +113,12 @@
             <version>4.12</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.10</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-core -->
         <dependency>
             <groupId>org.apache.calcite</groupId>
