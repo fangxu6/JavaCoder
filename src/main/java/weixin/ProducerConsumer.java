@@ -62,5 +62,17 @@ public abstract class ProducerConsumer<T> {
 
     public static void main(String[] args) {
 
+        ProducerConsumer<Integer> integerProducerConsumer;
+        integerProducerConsumer = new ProducerConsumer<Integer>(Executors.newFixedThreadPool(2)) {
+            @Override
+            void produce() {
+
+            }
+
+            @Override
+            void consume() {
+
+            }
+        };
     }
 }
