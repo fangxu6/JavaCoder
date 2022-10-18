@@ -1,5 +1,7 @@
 package thread.join;
 
+import java.util.Vector;
+
 /**
  * @author fangxu
  * on date:2022/10/8
@@ -23,6 +25,7 @@ public class JoinExample1 extends Thread
         JoinExample1 t1 = new JoinExample1();
         JoinExample1 t2 = new JoinExample1();
         JoinExample1 t3 = new JoinExample1();
+        Thread.yield();
         // thread t1 starts
         t1.start();
         // starts second thread when first thread t1 is died.
@@ -33,6 +36,9 @@ public class JoinExample1 extends Thread
         // start t2 and t3 thread
         t2.start();
         t3.start();
+
+        Vector<String> vector=new Vector<>();
+        vector.add("a");
     }
 }
 
