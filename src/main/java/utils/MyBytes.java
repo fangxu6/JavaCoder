@@ -1,4 +1,4 @@
-package myUtils;
+package utils;
 
 
 public class MyBytes {
