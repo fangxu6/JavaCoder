@@ -1,5 +1,7 @@
 package thread.cas;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * className:SimulatedCAS
  * package:thread.cas
@@ -31,5 +33,9 @@ class SimulatedCAS{
         }
         // 返回写入前的值
         return curValue;
+    }
+
+    void test(){
+        AtomicLong atomicLong = new AtomicLong();
     }
 }

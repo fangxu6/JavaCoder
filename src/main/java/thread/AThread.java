@@ -1,5 +1,7 @@
 package thread;
 
+import java.util.concurrent.Callable;
+
 /**
  * className:AThread
  * package:thread
@@ -9,4 +11,6 @@ package thread;
  * @Author:fangxu6@gmail.com
  */
 public class AThread {
+    Runnable runnable;
+    Callable callable;
 }

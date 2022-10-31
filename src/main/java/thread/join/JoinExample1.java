@@ -31,7 +31,9 @@ public class JoinExample1 extends Thread
         // starts second thread when first thread t1 is died.
         try
         {
-            t1.join(1500);
+//            t1.join(1500);
+            t1.join();
+            System.out.println("---------------");
         }catch(Exception e){System.out.println(e);}
         // start t2 and t3 thread
         t2.start();
