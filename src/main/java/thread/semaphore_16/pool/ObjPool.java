@@ -1,4 +1,4 @@
-package thread.semaphore.pool;
+package thread.semaphore_16.pool;
 
 import java.util.List;
 import java.util.Vector;

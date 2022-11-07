@@ -1,4 +1,4 @@
-package main.java.thread.concurrent20lession;
+package thread.countdownlatchandcyclicbarrier_20.concurrent20lession;
 
 import java.util.*;
 
