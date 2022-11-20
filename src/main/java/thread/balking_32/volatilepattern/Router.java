@@ -1,8 +1,4 @@
-package thread.copyonwrite29lession;
-
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
+package thread.balking_32.volatilepattern;
 
 /**
  * className:Router
@@ -14,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 
 //路由信息
-public final class Router{
+public final class Router {
     private final String  ip;
     private final Integer port;
     final String  iface;
@@ -40,4 +36,3 @@ public final class Router{
         return 0;
     }
 }
-
