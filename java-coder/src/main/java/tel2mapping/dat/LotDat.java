@@ -3,10 +3,35 @@ package tel2mapping.dat;
 import tel2mapping.dat.subentity.CassetteInformation;
 import tel2mapping.dat.subentity.TestTotal;
 
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
 public class LotDat {
+    public String getLotNo() {
+        return LotNo;
+    }
+
+    public String getCardNo() {
+        return CardNo;
+    }
+
+    public String getOperatorName() {
+        return OperatorName;
+    }
+
+    public String getMachineNo() {
+        return MachineNo;
+    }
+
+    public int getWaferNoList() {
+        return WaferNoList;
+    }
+
+    public String getWaferName() {
+        return WaferName;
+    }
+
     private String LotNo;
     private String CardNo;
     private String OperatorName;
@@ -59,4 +84,19 @@ public class LotDat {
     private List<CassetteInformation> cassetteInformationList;
     private String cassetteInformation;
     private String ProberModelInformation;
+
+    public LotDat read(String file) throws IOException {
+        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
+        byte[] bytes = new byte[200];
+        dis.read(bytes,0,25);
+        LotNo = new String(bytes).trim();
+        dis.read(bytes,0,5);
+        CardNo= new String(bytes).trim();
+        dis.read(bytes,0,5);
+        OperatorName= new String(bytes).trim();
+        dis.read(bytes,0,3);
+        MachineNo= new String(bytes).trim();
+
+        return this;
+    }
 }
