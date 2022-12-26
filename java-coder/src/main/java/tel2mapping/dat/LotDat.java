@@ -39,7 +39,7 @@ public class LotDat {
     private int WaferNoList;
 
     private String WaferName;
-    private String WaferSize;
+    private byte WaferSize;
     private String OrientationFlatAngle;
     private String XIndexingSize;
     private String YIndexingSize;
@@ -88,14 +88,26 @@ public class LotDat {
     public LotDat read(String file) throws IOException {
         DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
         byte[] bytes = new byte[200];
-        dis.read(bytes,0,25);
-        LotNo = new String(bytes).trim();
-        dis.read(bytes,0,5);
-        CardNo= new String(bytes).trim();
-        dis.read(bytes,0,5);
-        OperatorName= new String(bytes).trim();
-        dis.read(bytes,0,3);
-        MachineNo= new String(bytes).trim();
+        //Problem 如果前面bytes实际值比较大，会代入到下面的bytes中
+        dis.read(bytes, 0, 25);
+        LotNo = new String(bytes).substring(0,25).trim();
+        dis.read(bytes, 0, 5);
+        CardNo = new String(bytes).substring(0,5).trim();
+        dis.read(bytes, 0, 5);
+        OperatorName = new String(bytes).trim();
+        dis.read(bytes, 0, 3);
+        MachineNo = new String(bytes).trim();
+
+        dis.skipBytes(50 * 2);
+        dis.read(bytes, 0, 12);
+        WaferName = new String(bytes).trim();
+
+        WaferSize = dis.readByte();
+        dis.read(bytes, 0, 3);
+        OrientationFlatAngle = new String(bytes).substring(0,3).trim();
+        OrientatioFlatAngleEnum orientatioFlatAngleEnum = OrientatioFlatAngleEnum.getByOrientatioFlatAngle(Integer.valueOf(OrientationFlatAngle));
+        OrientationFlatAngle = OrientationFlatAngle +"   "+orientatioFlatAngleEnum.name();
+
 
         return this;
     }

@@ -14,18 +14,22 @@ import java.util.List;
 
 public class ReadP8File {
     public static void main(String[] args) throws IOException {
-        InputStream is = new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT");
-        byte[] a = new byte[388];
+        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
+        byte[] a = new byte[368];
         byte[] b = new byte[3];
         byte[] c = new byte[3];
         byte[] d = new byte[3];
+        dis.skipBytes(368);
+        dis.read(b,0,b.length);//98 -51 1
+        dis.read(c);//18 2 0
+        dis.read(d);//116 -49 1
 
-        String file ="D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
+        String file ="D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
         LotDat lotDat = new LotDat();
         lotDat=lotDat.read(file);
 
 
-        String file2 ="D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
+        String file2 ="D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
         WaferDat waferDat = new WaferDat();
         waferDat=waferDat.read(file2);
 
@@ -35,6 +39,7 @@ public class ReadP8File {
         Writer fw = new FileWriter(os);
         BufferedWriter  writer = new BufferedWriter(fw);
         writer.write("PRODUCT       = ");
+        writer.write(lotDat.getWaferName());
         writer.newLine();
         writer.write("LOT           = ");
         writer.write(lotDat.getLotNo());

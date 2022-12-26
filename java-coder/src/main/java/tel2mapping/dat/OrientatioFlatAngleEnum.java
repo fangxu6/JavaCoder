@@ -1,0 +1,29 @@
+package tel2mapping.dat;
+
+/**
+ * className:OrientatioFlatAngle
+ * package:tel2mapping.dat
+ * Description:
+ *
+ * @Date:2022/12/2621:51
+ * @Author:fangxu6@gmail.com
+ */
+public enum OrientatioFlatAngleEnum {
+    TOP(0),RIGHT(90),DOWN(180),LEFT(270);
+    private int value;
+    private OrientatioFlatAngleEnum(int value) {
+        this.value = value;
+    }
+        public static OrientatioFlatAngleEnum getByOrientatioFlatAngle(Integer angel){
+            if(angel==null) {
+                return null;
+            }
+            for (OrientatioFlatAngleEnum orientatioFlatAngleEnum : OrientatioFlatAngleEnum.values()) {
+                if (angel == orientatioFlatAngleEnum.value) {
+                    return orientatioFlatAngleEnum;
+                }
+            }
+            return null;
+        }
+
+}

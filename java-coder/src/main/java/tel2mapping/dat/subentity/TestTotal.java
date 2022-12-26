@@ -5,6 +5,12 @@ import java.util.Date;
 public class TestTotal {
     private short PassTotal;
 
+
+    private short FailTotal;
+    private short TestTotal;
+    private Date LotStartTime;
+    private Date LotEndTime;
+
     public short getPassTotal() {
         return PassTotal;
     }
@@ -45,8 +51,4 @@ public class TestTotal {
         LotEndTime = lotEndTime;
     }
 
-    private short FailTotal;
-    private short TestTotal;
-    private Date LotStartTime;
-    private Date LotEndTime;
 }
