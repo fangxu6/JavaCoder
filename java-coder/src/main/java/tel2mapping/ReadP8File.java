@@ -2,6 +2,7 @@ package tel2mapping;
 
 import tel2mapping.dat.LotDat;
 import tel2mapping.dat.WaferDat;
+import tel2mapping.dat.subentity.DieData;
 import tel2mapping.dat.subentity.LineData;
 
 import java.io.*;
@@ -61,11 +62,29 @@ public class ReadP8File {
             List<LineData> lineDataList = waferDat.getMdpData().getRecords();
             LineData lineData = lineDataList.get(i);
             int rows = lineData.getNoOfDies();
-            for (int j = 0; j < rows; j++) {
+//            writer.write(String.valueOf(rows)+"(");
+//            writer.write(lineData.getFirstAddressXOfRecord()+",");
+//            writer.write(lineData.getFirstAddressYOfRecord()+") ");
+
+            int xmin = waferDat.getXMinimin();
+            int xmax = waferDat.getXMaximun();
+            int firstAddressXOfRecord = lineData.getFirstAddressXOfRecord();
+            for (int j = xmin,k=0; j <= xmax; j++) {
                 //0-7bin 8result 12margin
+//                List<DieData> dataLine = lineData.getLines();
+                if (j<firstAddressXOfRecord||k>=rows) {
+                    writer.write(".");
+                } else{
+                    DieData dieData = lineData.getLines().get(k);
+                    writer.write(dieData.getBin());
+                    k++;
+                }
+
             }
+            writer.newLine();
 
         }
+        writer.newLine();
         writer.flush();
         writer.close();
 

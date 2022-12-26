@@ -4,13 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MapData {
-
-
-
     private short NoOfRecords;
     private int  InitialDieDistanceX;
     private int InitialDieDistanceY;
-
     private List<LineData> records;
 
     public short getNoOfRecords() {

@@ -10,6 +10,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WaferDat {
+
+
+    private String WaferID;
+    private String WaferNo;
+    private char CassetteNo;
+    private String SlotNo;
+    private char TestCount;
+    private TestTotal testTotal;
+
+    private MapData mdpData;
+    private int XMaximun;
+    private int XMinimin;
+
+    public TestTotal getTestTotal() {
+        return testTotal;
+    }
+
+    public void setTestTotal(TestTotal testTotal) {
+        this.testTotal = testTotal;
+    }
+
+    public MapData getMdpData() {
+        return mdpData;
+    }
+
+    public void setMdpData(MapData mdpData) {
+        this.mdpData = mdpData;
+    }
     public String getWaferID() {
         return WaferID;
     }
@@ -34,32 +62,21 @@ public class WaferDat {
         SlotNo = slotNo;
     }
 
-    private String WaferID;
-    private String WaferNo;
-    private char CassetteNo;
-    private String SlotNo;
-    private char TestCount;
-    private TestTotal testTotal;
-
-    private MapData mdpData;
-
-    public TestTotal getTestTotal() {
-        return testTotal;
+    public int getXMaximun() {
+        return XMaximun;
     }
 
-    public void setTestTotal(TestTotal testTotal) {
-        this.testTotal = testTotal;
+    public void setXMaximun(int XMaximun) {
+        this.XMaximun = XMaximun;
     }
 
-    public MapData getMdpData() {
-        return mdpData;
+    public int getXMinimin() {
+        return XMinimin;
     }
 
-    public void setMdpData(MapData mdpData) {
-        this.mdpData = mdpData;
+    public void setXMinimin(int XMinimin) {
+        this.XMinimin = XMinimin;
     }
-
-
 
     public WaferDat read(String file) throws IOException {
         DataInputStream dis = new DataInputStream(new FileInputStream(file));
@@ -92,19 +109,38 @@ public class WaferDat {
         mapData.setInitialDieDistanceY(EndianUtils.readSwappedUnsignedShort(dis));
         List<LineData> records = new ArrayList<>(num);
 
-        int byteCount=66;
+        int byteCount=66;//TODO del
+        XMinimin=Integer.MAX_VALUE;;
+        XMaximun=Integer.MIN_VALUE;
         for (int i = 0; i < num; i++) {
 
             LineData lineData = new LineData();
-            lineData.setFirstAddressXOfRecord(EndianUtils.readSwappedUnsignedShort(dis));
-            lineData.setFirstAddressYOfRecord(EndianUtils.readSwappedUnsignedShort(dis));
+            int X=EndianUtils.readSwappedUnsignedShort(dis);
+            int Y=EndianUtils.readSwappedUnsignedShort(dis);
+
+            lineData.setFirstAddressXOfRecord(X);
+            lineData.setFirstAddressYOfRecord(Y);
             short numberOfDies = (short) (dis.readByte() & 0xFF);
+            XMinimin=Math.min(XMinimin,X);
+            XMaximun=Math.max(X+numberOfDies,XMaximun) ;
             lineData.setNoOfDies(numberOfDies);
             List<DieData> dies = new ArrayList<>(numberOfDies);
             byteCount+=(5+numberOfDies*2);
             for (int j = 0; j < numberOfDies; j++) {
                 DieData dieData = new DieData();
-                dieData.setDieData(EndianUtils.readSwappedUnsignedShort(dis));
+                int binInt = EndianUtils.readSwappedUnsignedShort(dis);
+                dieData.setDieData(binInt);
+                byte binByte = (byte) (binInt & 0xFF);
+                char lowInt = (char) (binByte+48);
+                if (lowInt>57){
+                    lowInt+=8;//跳过9-A之间的字符
+                }
+                String ch = String.valueOf(lowInt);
+                if(binByte==0){
+                    ch=".";
+                }
+                dieData.setBin(ch);
+
                 dies.add(dieData);
             }
             lineData.setLines(dies);

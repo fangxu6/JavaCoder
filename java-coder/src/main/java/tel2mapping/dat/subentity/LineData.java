@@ -7,6 +7,17 @@ public class LineData {
     private int FirstAddressYOfRecord;
     private short NoOfDies;
     private List<DieData> lines;
+    private List<Character> map;
+
+
+    public List<Character> getMap() {
+        return map;
+    }
+
+    public void setMap(List<Character> map) {
+        this.map = map;
+    }
+
 
     public int getFirstAddressXOfRecord() {
         return FirstAddressXOfRecord;
