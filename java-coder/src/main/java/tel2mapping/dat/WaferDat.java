@@ -99,8 +99,8 @@ public class WaferDat {
 
         TestCount = (char) dis.readByte();
         TestTotal testTotal = new TestTotal();
-        testTotal.setFailTotal(EndianUtils.swapShort(dis.readShort()));
         testTotal.setPassTotal(EndianUtils.swapShort(dis.readShort()));
+        testTotal.setFailTotal(EndianUtils.swapShort(dis.readShort()));
         testTotal.setTestTotal(EndianUtils.swapShort(dis.readShort()));
         byte[] bytesTime = new byte[12];
         byte[] bytesendTime = new byte[12];

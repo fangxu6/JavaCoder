@@ -113,11 +113,25 @@ public class ReadP8File {
         writer.write("========================================================");
         writer.newLine();
 
-        writer.write("PassDie =  ");//TODO Quan Yield
+        writer.write("PassDie = ");
+        short passDie = waferDat.getTestTotal().getPassTotal();
+        short failDie = waferDat.getTestTotal().getFailTotal();
+        short totalDie = waferDat.getTestTotal().getTestTotal();
+        double passYield = ((double)passDie)/totalDie*100;
+        double failYield = ((double)failDie)/totalDie*100;
+
+        String passQuanYield = String.format("%6d %6.2f",passDie,passYield);
+        writer.write(passQuanYield);
         writer.newLine();
-        writer.write("FailDie =  ");//TODO Quan Yield
+        writer.write("FailDie = ");
+        String failQuanYield = String.format("%6d %6.2f",failDie,failYield);
+        writer.write(failQuanYield);
+
         writer.newLine();
-        writer.write("TotalDie =  ");//TODO Quan Yield
+        writer.write("TotalDie= ");
+        String totalQuanYield = String.format("%6d",totalDie);
+        writer.write(totalQuanYield);
+
         writer.newLine();
 
         writer.flush();
