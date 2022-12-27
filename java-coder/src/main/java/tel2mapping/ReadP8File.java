@@ -20,24 +20,23 @@ public class ReadP8File {
         byte[] c = new byte[3];
         byte[] d = new byte[3];
         dis.skipBytes(368);
-        dis.read(b,0,b.length);//98 -51 1
+        dis.read(b, 0, b.length);//98 -51 1
         dis.read(c);//18 2 0
         dis.read(d);//116 -49 1
 
-        String file ="D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
+        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
         LotDat lotDat = new LotDat();
-        lotDat=lotDat.read(file);
+        lotDat = lotDat.read(file);
 
 
-        String file2 ="D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
+        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
         WaferDat waferDat = new WaferDat();
-        waferDat=waferDat.read(file2);
-
+        waferDat = waferDat.read(file2);
 
 
         File os = new File("out.txt");
         Writer fw = new FileWriter(os);
-        BufferedWriter  writer = new BufferedWriter(fw);
+        BufferedWriter writer = new BufferedWriter(fw);
         writer.write("PRODUCT       = ");
         writer.write(lotDat.getWaferName());
         writer.newLine();
@@ -48,17 +47,24 @@ public class ReadP8File {
         writer.write(waferDat.getWaferID());
         writer.newLine();
         writer.write("START TIME    = ");
-//        writer.write(waferDat.getTestTotal().getLotStartTime());
+        writer.write(waferDat.getTestTotal().getLotStartTime().toString());
         writer.newLine();
         writer.write("END TIME      = ");
-//        writer.write(waferDat.getTestTotal().getLotEndTime());
+        writer.write(waferDat.getTestTotal().getLotEndTime().toString());
         writer.newLine();
-        writer.write("X QUANTUM     = ");//TODO
+        writer.write("X QUANTUM     = ");
+        int XQuant = waferDat.getXMaximun() - waferDat.getXMinimin();
+        writer.write(String.valueOf(XQuant));
         writer.newLine();
-        writer.write("Y QUANTUM     = ");//TODO
+        writer.write("Y QUANTUM     = ");
+        writer.write(String.valueOf(waferDat.getMdpData().getNoOfRecords()));
         writer.newLine();
         writer.write("FLAT/NOTCH    = ");//TODO
+        writer.write(lotDat.getOrientationFlatAngle());
+
         writer.newLine();
+        writer.newLine();
+
         writer.write("[ WAFER MAP]");
         writer.newLine();
 
@@ -74,12 +80,12 @@ public class ReadP8File {
             int xmin = waferDat.getXMinimin();
             int xmax = waferDat.getXMaximun();
             int firstAddressXOfRecord = lineData.getFirstAddressXOfRecord();
-            for (int j = xmin,k=0; j <= xmax; j++) {
+            for (int j = xmin, k = 0; j <= xmax; j++) {
                 //0-7bin 8result 12margin
 //                List<DieData> dataLine = lineData.getLines();
-                if (j<firstAddressXOfRecord||k>=rows) {
+                if (j < firstAddressXOfRecord || k >= rows) {
                     writer.write(".");
-                } else{
+                } else {
                     DieData dieData = lineData.getLines().get(k);
                     writer.write(dieData.getBin());
                     k++;
@@ -90,6 +96,30 @@ public class ReadP8File {
 
         }
         writer.newLine();
+
+        writer.write("[ BIN SUMMARY]");
+        writer.newLine();
+        writer.write("BIN No.    Quan. Yield%   P/F  Bin Description");
+        writer.newLine();
+        writer.write("========================================================");
+        writer.newLine();
+        for (int i = 0; i < 10; i++) {
+            writer.write("BIN   " + i + " =");//TODO Quan Yield P/F
+            writer.newLine();
+        }
+
+
+
+        writer.write("========================================================");
+        writer.newLine();
+
+        writer.write("PassDie =  ");//TODO Quan Yield
+        writer.newLine();
+        writer.write("FailDie =  ");//TODO Quan Yield
+        writer.newLine();
+        writer.write("TotalDie =  ");//TODO Quan Yield
+        writer.newLine();
+
         writer.flush();
         writer.close();
 

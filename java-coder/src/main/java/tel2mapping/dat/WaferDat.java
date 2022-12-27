@@ -7,6 +7,8 @@ import tel2mapping.dat.subentity.*;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -104,9 +106,11 @@ public class WaferDat {
         byte[] bytesendTime = new byte[12];
 
         dis.read(bytesTime, 0, 12);
-        Date startTime = ReadToDate(bytesTime);
+        LocalDateTime startTime = ReadToDate(bytesTime);
         dis.read(bytesendTime, 0, 12);
-        Date endTime = ReadToDate(bytesendTime);
+        LocalDateTime endTime = ReadToDate(bytesendTime);
+        testTotal.setLotStartTime(startTime);
+        testTotal.setLotEndTime(endTime);
         setTestTotal(testTotal);
 
         MapData mapData = new MapData();
@@ -130,7 +134,7 @@ public class WaferDat {
             lineData.setFirstAddressYOfRecord(Y);
             short numberOfDies = (short) (dis.readByte() & 0xFF);
             XMinimin = Math.min(XMinimin, X);
-            XMaximun = Math.max(X + numberOfDies, XMaximun);
+            XMaximun = Math.max(X + numberOfDies - 1, XMaximun);
             lineData.setNoOfDies(numberOfDies);
             List<DieData> dies = new ArrayList<>(numberOfDies);
             byteCount += (5 + numberOfDies * 2);
@@ -178,7 +182,7 @@ public class WaferDat {
                 .toString().substring(1) : temp.toString();
     }
 
-    Date ReadToDate(byte[] bytes) throws IOException {
+    LocalDateTime ReadToDate(byte[] bytes) throws IOException {
 
         byte[] yearBytes = new byte[2];
         byte[] monthBytes = new byte[2];
@@ -194,13 +198,13 @@ public class WaferDat {
         System.arraycopy(bytes, 10, secondBytes, 0, 2);
 
 
-
-        int year = 2000+ Integer.valueOf(bcd2Str(yearBytes));
+        int year = 2000 + Integer.valueOf(bcd2Str(yearBytes));
         int month = Integer.valueOf(bcd2Str(monthBytes));
         Integer day = Integer.valueOf(bcd2Str(dayBytes));
         Integer hour = Integer.valueOf(bcd2Str(hourBytes));
         Integer min = Integer.valueOf(bcd2Str(minBytes));
         Integer sec = Integer.valueOf(bcd2Str(secondBytes));
+        LocalDateTime localDateTime = LocalDateTime.of(year, month, day, hour, min, sec);
 
 
 //        year = 2000 + dis.read(bytes,0,2);;
@@ -212,6 +216,6 @@ public class WaferDat {
         // reserved
 //        dis.read(bytes,0,2);
 
-        return new Date(year, month, day, hour, min, sec);
+        return localDateTime;
     }
 }

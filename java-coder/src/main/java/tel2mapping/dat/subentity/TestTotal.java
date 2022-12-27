@@ -1,6 +1,7 @@
 package tel2mapping.dat.subentity;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class TestTotal {
     private short PassTotal;
@@ -8,8 +9,8 @@ public class TestTotal {
 
     private short FailTotal;
     private short TestTotal;
-    private Date LotStartTime;
-    private Date LotEndTime;
+    private LocalDateTime LotStartTime;
+    private LocalDateTime LotEndTime;
 
     public short getPassTotal() {
         return PassTotal;
@@ -35,19 +36,19 @@ public class TestTotal {
         TestTotal = testTotal;
     }
 
-    public Date getLotStartTime() {
+    public LocalDateTime getLotStartTime() {
         return LotStartTime;
     }
 
-    public void setLotStartTime(Date lotStartTime) {
+    public void setLotStartTime(LocalDateTime lotStartTime) {
         LotStartTime = lotStartTime;
     }
 
-    public Date getLotEndTime() {
+    public LocalDateTime getLotEndTime() {
         return LotEndTime;
     }
 
-    public void setLotEndTime(Date lotEndTime) {
+    public void setLotEndTime(LocalDateTime lotEndTime) {
         LotEndTime = lotEndTime;
     }
 

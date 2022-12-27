@@ -40,6 +40,15 @@ public class LotDat {
 
     private String WaferName;
     private byte WaferSize;
+
+    public String getOrientationFlatAngle() {
+        return OrientationFlatAngle;
+    }
+
+    public void setOrientationFlatAngle(String orientationFlatAngle) {
+        OrientationFlatAngle = orientationFlatAngle;
+    }
+
     private String OrientationFlatAngle;
     private String XIndexingSize;
     private String YIndexingSize;
