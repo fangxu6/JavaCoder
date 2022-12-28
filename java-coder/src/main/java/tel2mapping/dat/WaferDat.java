@@ -9,9 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class WaferDat {
 
@@ -120,10 +118,9 @@ public class WaferDat {
         mapData.setInitialDieDistanceY(EndianUtils.readSwappedUnsignedShort(dis));
         List<LineData> records = new ArrayList<>(num);
 
-        int byteCount = 66;//TODO del
         XMinimin = Integer.MAX_VALUE;
-        ;
         XMaximun = Integer.MIN_VALUE;
+        Map<Byte,Integer> binMap = new HashMap<>();
         for (int i = 0; i < num; i++) {
 
             LineData lineData = new LineData();
@@ -137,7 +134,6 @@ public class WaferDat {
             XMaximun = Math.max(X + numberOfDies - 1, XMaximun);
             lineData.setNoOfDies(numberOfDies);
             List<DieData> dies = new ArrayList<>(numberOfDies);
-            byteCount += (5 + numberOfDies * 2);
             for (int j = 0; j < numberOfDies; j++) {
                 DieData dieData = new DieData();
                 int binInt = EndianUtils.readSwappedUnsignedShort(dis);
@@ -147,6 +143,12 @@ public class WaferDat {
                 if (lowInt > 57) {
                     lowInt += 8;//跳过9-A之间的字符
                 }
+                if ((binInt>>8&0x01)==1){
+                    dieData.setPassOrFail("P");
+                } else {
+                    dieData.setPassOrFail("F");
+                }
+                binMap.put(binByte,binMap.getOrDefault(binByte,0)+1);
                 String ch = String.valueOf(lowInt);
                 if (binByte == 0) {
                     ch = ".";
@@ -159,9 +161,9 @@ public class WaferDat {
             records.add(lineData);
         }
         mapData.setRecords(records);
+        mapData.setBinMap(binMap);
         setMdpData(mapData);
 
-        System.out.println(byteCount);
         byte b = dis.readByte();
 
 

@@ -3,6 +3,7 @@ package tel2mapping.dat.subentity;
 public class DieData {
     private int dieData;
     private String bin;
+    private String passOrFail;
 
     public int getDieData() {
         return dieData;
@@ -18,5 +19,13 @@ public class DieData {
 
     public void setBin(String bin) {
         this.bin = bin;
+    }
+
+    public String getPassOrFail() {
+        return passOrFail;
+    }
+
+    public void setPassOrFail(String passOrFail) {
+        this.passOrFail = passOrFail;
     }
 }

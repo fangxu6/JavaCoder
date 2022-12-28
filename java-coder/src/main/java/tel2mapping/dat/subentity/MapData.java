@@ -2,12 +2,14 @@ package tel2mapping.dat.subentity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class MapData {
     private short NoOfRecords;
     private int  InitialDieDistanceX;
     private int InitialDieDistanceY;
     private List<LineData> records;
+    private Map<Byte,Integer> binMap;
 
     public short getNoOfRecords() {
         return NoOfRecords;
@@ -41,4 +43,11 @@ public class MapData {
         this.records = records;
     }
 
+    public Map<Byte, Integer> getBinMap() {
+        return binMap;
+    }
+
+    public void setBinMap(Map<Byte, Integer> binMap) {
+        this.binMap = binMap;
+    }
 }

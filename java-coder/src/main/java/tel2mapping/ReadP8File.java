@@ -10,7 +10,10 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ReadP8File {
     public static void main(String[] args) throws IOException {
@@ -103,11 +106,22 @@ public class ReadP8File {
         writer.newLine();
         writer.write("========================================================");
         writer.newLine();
-        for (int i = 0; i < 10; i++) {
-            writer.write("BIN   " + i + " =");//TODO Quan Yield P/F
+//        for (int i = 0; i < 10; i++) {
+//            writer.write("BIN   " + i + " =");//TODO Quan Yield P/F
+//            writer.newLine();
+//        }
+        Map<Byte, Integer> map = waferDat.getMdpData().getBinMap();
+        map = sortMapByKey(map);
+        int i = 0;
+        String binQuanYield;
+        for (Map.Entry<Byte, Integer> entry : map.entrySet()) {
+            Byte key = entry.getKey();
+            double binYield = ((double) entry.getValue()) / waferDat.getTestTotal().getTestTotal() * 100;
+
+            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s",entry.getKey(),entry.getValue(),binYield);
+            writer.write(binQuanYield);
             writer.newLine();
         }
-
 
 
         writer.write("========================================================");
@@ -117,19 +131,19 @@ public class ReadP8File {
         short passDie = waferDat.getTestTotal().getPassTotal();
         short failDie = waferDat.getTestTotal().getFailTotal();
         short totalDie = waferDat.getTestTotal().getTestTotal();
-        double passYield = ((double)passDie)/totalDie*100;
-        double failYield = ((double)failDie)/totalDie*100;
+        double passYield = ((double) passDie) / totalDie * 100;
+        double failYield = ((double) failDie) / totalDie * 100;
 
-        String passQuanYield = String.format("%6d %6.2f",passDie,passYield);
+        String passQuanYield = String.format("%6d %6.2f", passDie, passYield);
         writer.write(passQuanYield);
         writer.newLine();
         writer.write("FailDie = ");
-        String failQuanYield = String.format("%6d %6.2f",failDie,failYield);
+        String failQuanYield = String.format("%6d %6.2f", failDie, failYield);
         writer.write(failQuanYield);
 
         writer.newLine();
         writer.write("TotalDie= ");
-        String totalQuanYield = String.format("%6d",totalDie);
+        String totalQuanYield = String.format("%6d", totalDie);
         writer.write(totalQuanYield);
 
         writer.newLine();
@@ -139,5 +153,24 @@ public class ReadP8File {
 
         fw.close();
 
+    }
+
+    /**
+     * 使用 Map按key进行排序
+     * @param map
+     * @return
+     */
+    public static Map<Byte, Integer> sortMapByKey(Map<Byte, Integer> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+//        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
+        Map<Byte, Integer> sortMap = new TreeMap<Byte, Integer>(new Comparator<Byte>() {
+            public int compare(Byte obj1, Byte obj2) {
+                return obj1.compareTo(obj2);//升序排序
+            }
+        });
+        sortMap.putAll(map);
+        return sortMap;
     }
 }
