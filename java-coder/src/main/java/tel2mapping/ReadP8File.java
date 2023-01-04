@@ -17,22 +17,25 @@ import java.util.TreeMap;
 
 public class ReadP8File {
     public static void main(String[] args) throws IOException {
-        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
-        byte[] a = new byte[368];
-        byte[] b = new byte[3];
-        byte[] c = new byte[3];
-        byte[] d = new byte[3];
-        dis.skipBytes(368);
-        dis.read(b, 0, b.length);//98 -51 1
-        dis.read(c);//18 2 0
-        dis.read(d);//116 -49 1
+//        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
+//        byte[] a = new byte[368];
+//        byte[] b = new byte[3];
+//        byte[] c = new byte[3];
+//        byte[] d = new byte[3];
+//        dis.skipBytes(368);
+//        dis.read(b, 0, b.length);//98 -51 1
+//        dis.read(c);//18 2 0
+//        dis.read(d);//116 -49 1
 
-        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
+        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\ON2201104AA\\LOT2.DAT";
+//        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
+
         LotDat lotDat = new LotDat();
         lotDat = lotDat.read(file);
 
 
-        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
+        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\ON2201104AA\\Q2BX73-14C22.DAT";
+//        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
         WaferDat waferDat = new WaferDat();
         waferDat = waferDat.read(file2);
 
@@ -118,7 +121,13 @@ public class ReadP8File {
             Byte key = entry.getKey();
             double binYield = ((double) entry.getValue()) / waferDat.getTestTotal().getTestTotal() * 100;
 
-            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s",entry.getKey(),entry.getValue(),binYield);
+            String PFFlag = "F";
+            if (entry.getKey() == 0b00000001) {
+                PFFlag = "P";
+            } else {
+                PFFlag = "F";
+            }
+            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s", entry.getKey(), entry.getValue(), binYield, PFFlag);
             writer.write(binQuanYield);
             writer.newLine();
         }
@@ -157,6 +166,7 @@ public class ReadP8File {
 
     /**
      * 使用 Map按key进行排序
+     *
      * @param map
      * @return
      */

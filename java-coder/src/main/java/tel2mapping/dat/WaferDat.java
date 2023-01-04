@@ -112,20 +112,22 @@ public class WaferDat {
         setTestTotal(testTotal);
 
         MapData mapData = new MapData();
-        short num = (short) (dis.readByte() & 0xFF);
-        mapData.setNoOfRecords(num);
+        short lineNumber = (short) (dis.readByte() & 0xFF);
+        mapData.setNoOfRecords(lineNumber);
         mapData.setInitialDieDistanceX(EndianUtils.readSwappedUnsignedShort(dis));
         mapData.setInitialDieDistanceY(EndianUtils.readSwappedUnsignedShort(dis));
-        List<LineData> records = new ArrayList<>(num);
+        //68 bytes
+        List<LineData> records = new ArrayList<>(lineNumber);
 
         XMinimin = Integer.MAX_VALUE;
         XMaximun = Integer.MIN_VALUE;
-        Map<Byte,Integer> binMap = new HashMap<>();
-        for (int i = 0; i < num; i++) {
-
+        Map<Byte, Integer> binMap = new HashMap<>();
+        for (int i = 0; i < lineNumber; i++) {
+//5*n+14*2+25 33 39 44 48 52 56 59
+            //932-68=864
             LineData lineData = new LineData();
-            int X = EndianUtils.readSwappedUnsignedShort(dis);
-            int Y = EndianUtils.readSwappedUnsignedShort(dis);
+            int X = EndianUtils.readSwappedShort(dis);//readSwappedUnsignedShort
+            int Y = EndianUtils.readSwappedShort(dis);
 
             lineData.setFirstAddressXOfRecord(X);
             lineData.setFirstAddressYOfRecord(Y);
@@ -140,15 +142,16 @@ public class WaferDat {
                 dieData.setDieData(binInt);
                 byte binByte = (byte) (binInt & 0xFF);
                 char lowInt = (char) (binByte + 48);
+
                 if (lowInt > 57) {
                     lowInt += 8;//跳过9-A之间的字符
                 }
-                if ((binInt>>8&0x01)==1){
-                    dieData.setPassOrFail("P");
-                } else {
+                if ((binInt >> 8 & 0x01) == 1) {
                     dieData.setPassOrFail("F");
+                } else {
+                    dieData.setPassOrFail("P");
                 }
-                binMap.put(binByte,binMap.getOrDefault(binByte,0)+1);
+                binMap.put(binByte, binMap.getOrDefault(binByte, 0) + 1);
                 String ch = String.valueOf(lowInt);
                 if (binByte == 0) {
                     ch = ".";
@@ -160,6 +163,7 @@ public class WaferDat {
             lineData.setLines(dies);
             records.add(lineData);
         }
+        binMap.remove((byte)0);
         mapData.setRecords(records);
         mapData.setBinMap(binMap);
         setMdpData(mapData);
