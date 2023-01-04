@@ -5,7 +5,11 @@ public class BinData {
     Long binNum;
     String dieAttribute;
 
-    //TODO 初始化
+    public BinData(byte[] binBytes, Long binNum) {
+        this.binBytes = binBytes;
+        this.binNum = binNum;
+    }
+
     public void increasedByBinByte(byte[] binBytes) {
         if (this.binBytes[0] == binBytes[0]) {
             binNum += 1;
@@ -13,8 +17,12 @@ public class BinData {
     }
 
     public String getBinAttribute(byte[] binBytes) {
-        //TODO  if else
-        return null;
+        if ((binBytes[1]&0x01)==1){
+            dieAttribute = "P";
+        } else {
+            dieAttribute = "F";
+        }
+        return dieAttribute;
     }
 
 }

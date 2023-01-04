@@ -2,6 +2,7 @@ package tel2mapping.dat;
 
 import org.apache.commons.io.EndianUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.formula.functions.T;
 import tel2mapping.dat.subentity.*;
 
 import java.io.DataInputStream;
@@ -21,7 +22,7 @@ public class WaferDat {
     private char TestCount;
     private TestTotal testTotal;
 
-    private MapData mdpData;
+    private MapData mapData;
     private int XMaximun;
     private int XMinimin;
 
@@ -33,53 +34,29 @@ public class WaferDat {
         this.testTotal = testTotal;
     }
 
-    public MapData getMdpData() {
-        return mdpData;
+    public MapData getMapData() {
+        return mapData;
     }
 
-    public void setMdpData(MapData mdpData) {
-        this.mdpData = mdpData;
+    public void setMapData(MapData mdpData) {
+        this.mapData = mdpData;
     }
 
     public String getWaferID() {
         return WaferID;
     }
 
-    public void setWaferID(String waferID) {
-        WaferID = waferID;
-    }
 
-    public String getWaferNo() {
-        return WaferNo;
-    }
-
-    public void setWaferNo(String waferNo) {
-        WaferNo = waferNo;
-    }
-
-    public String getSlotNo() {
-        return SlotNo;
-    }
-
-    public void setSlotNo(String slotNo) {
-        SlotNo = slotNo;
-    }
 
     public int getXMaximun() {
         return XMaximun;
     }
 
-    public void setXMaximun(int XMaximun) {
-        this.XMaximun = XMaximun;
-    }
 
     public int getXMinimin() {
         return XMinimin;
     }
 
-    public void setXMinimin(int XMinimin) {
-        this.XMinimin = XMinimin;
-    }
 
     public WaferDat read(String file) throws IOException {
         DataInputStream dis = new DataInputStream(new FileInputStream(file));
@@ -116,17 +93,14 @@ public class WaferDat {
         mapData.setNoOfRecords(lineNumber);
         mapData.setInitialDieDistanceX(EndianUtils.readSwappedUnsignedShort(dis));
         mapData.setInitialDieDistanceY(EndianUtils.readSwappedUnsignedShort(dis));
-        //68 bytes
         List<LineData> records = new ArrayList<>(lineNumber);
 
         XMinimin = Integer.MAX_VALUE;
         XMaximun = Integer.MIN_VALUE;
         Map<Byte, Integer> binMap = new HashMap<>();
         for (int i = 0; i < lineNumber; i++) {
-//5*n+14*2+25 33 39 44 48 52 56 59
-            //932-68=864
             LineData lineData = new LineData();
-            int X = EndianUtils.readSwappedShort(dis);//readSwappedUnsignedShort
+            int X = EndianUtils.readSwappedShort(dis);
             int Y = EndianUtils.readSwappedShort(dis);
 
             lineData.setFirstAddressXOfRecord(X);
@@ -135,7 +109,7 @@ public class WaferDat {
             XMinimin = Math.min(XMinimin, X);
             XMaximun = Math.max(X + numberOfDies - 1, XMaximun);
             lineData.setNoOfDies(numberOfDies);
-            List<DieData> dies = new ArrayList<>(numberOfDies);
+            List<DieData> lineDies = new ArrayList<>(numberOfDies);
             for (int j = 0; j < numberOfDies; j++) {
                 DieData dieData = new DieData();
                 int binInt = EndianUtils.readSwappedUnsignedShort(dis);
@@ -158,15 +132,15 @@ public class WaferDat {
                 }
                 dieData.setBin(ch);
 
-                dies.add(dieData);
+                lineDies.add(dieData);
             }
-            lineData.setLines(dies);
+            lineData.setLines(lineDies);
             records.add(lineData);
         }
         binMap.remove((byte)0);
         mapData.setRecords(records);
         mapData.setBinMap(binMap);
-        setMdpData(mapData);
+        setMapData(mapData);
 
         byte b = dis.readByte();
 
@@ -224,4 +198,6 @@ public class WaferDat {
 
         return localDateTime;
     }
+
+
 }

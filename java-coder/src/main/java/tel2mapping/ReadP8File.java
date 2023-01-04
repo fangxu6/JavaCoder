@@ -63,9 +63,9 @@ public class ReadP8File {
         writer.write(String.valueOf(XQuant));
         writer.newLine();
         writer.write("Y QUANTUM     = ");
-        writer.write(String.valueOf(waferDat.getMdpData().getNoOfRecords()));
+        writer.write(String.valueOf(waferDat.getMapData().getNoOfRecords()));
         writer.newLine();
-        writer.write("FLAT/NOTCH    = ");//TODO
+        writer.write("FLAT/NOTCH    = ");
         writer.write(lotDat.getOrientationFlatAngle());
 
         writer.newLine();
@@ -74,9 +74,9 @@ public class ReadP8File {
         writer.write("[ WAFER MAP]");
         writer.newLine();
 
-        int lines = waferDat.getMdpData().getNoOfRecords();
+        int lines = waferDat.getMapData().getNoOfRecords();
         for (int i = 0; i < lines; i++) {
-            List<LineData> lineDataList = waferDat.getMdpData().getRecords();
+            List<LineData> lineDataList = waferDat.getMapData().getRecords();
             LineData lineData = lineDataList.get(i);
             int rows = lineData.getNoOfDies();
 //            writer.write(String.valueOf(rows)+"(");
@@ -113,9 +113,8 @@ public class ReadP8File {
 //            writer.write("BIN   " + i + " =");//TODO Quan Yield P/F
 //            writer.newLine();
 //        }
-        Map<Byte, Integer> map = waferDat.getMdpData().getBinMap();
+        Map<Byte, Integer> map = waferDat.getMapData().getBinMap();
         map = sortMapByKey(map);
-        int i = 0;
         String binQuanYield;
         for (Map.Entry<Byte, Integer> entry : map.entrySet()) {
             Byte key = entry.getKey();
