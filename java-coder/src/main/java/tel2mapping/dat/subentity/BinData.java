@@ -1,42 +1,28 @@
 package tel2mapping.dat.subentity;
 
 public class BinData {
-    byte[] binBytes;
-    Long binNum;
+    byte binBytes;
+    Integer binNum;
     String dieAttribute;
 
-    public BinData(byte[] binBytes, Long binNum) {
+    public BinData(byte binBytes, Integer binNum) {
         this.binBytes = binBytes;
         this.binNum = binNum;
     }
 
-    public void increasedByBinByte(byte[] binBytes) {
-        if (this.binBytes[0] == binBytes[0]) {
-            binNum += 1;
-        }
+    public void setDieAttribute(String dieAttribute) {
+        this.dieAttribute = dieAttribute;
     }
 
-    public String getBinAttribute(byte[] binBytes) {
-        if ((binBytes[1]&0x01)==1){
-            dieAttribute = "P";
-        } else {
-            dieAttribute = "F";
-        }
+    public byte getBinBytes() {
+        return binBytes;
+    }
+
+    public Integer getBinNum() {
+        return binNum;
+    }
+
+    public String getDieAttribute() {
         return dieAttribute;
     }
-
 }
-
-
-//    mappingData
-//            binData
-//
-//    second wafer
-//1完整走完
-//for(i)
-//    failBin=>otherBin
-//2非完整走完
-//	0 pass
-//    failBin=>otherBin
-//	1 =>Bin1
-//}

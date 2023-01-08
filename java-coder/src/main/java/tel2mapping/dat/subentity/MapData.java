@@ -9,7 +9,8 @@ public class MapData {
     private int  InitialDieDistanceX;
     private int InitialDieDistanceY;
     private List<LineData> records;
-    private Map<Byte,Integer> binMap;
+    private Map<Integer,Integer> binMap;
+    private List<BinData> binData;
 
     public short getNoOfRecords() {
         return NoOfRecords;
@@ -43,11 +44,19 @@ public class MapData {
         this.records = records;
     }
 
-    public Map<Byte, Integer> getBinMap() {
+    public Map<Integer, Integer> getBinMap() {
         return binMap;
     }
 
-    public void setBinMap(Map<Byte, Integer> binMap) {
+    public void setBinMap(Map<Integer, Integer> binMap) {
         this.binMap = binMap;
+    }
+
+    public List<BinData> getBinData() {
+        return binData;
+    }
+
+    public void setBinData(List<BinData> binData) {
+        this.binData = binData;
     }
 }

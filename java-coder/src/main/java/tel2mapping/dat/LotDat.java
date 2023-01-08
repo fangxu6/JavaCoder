@@ -8,30 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 public class LotDat {
-    public String getLotNo() {
-        return LotNo;
-    }
-
-    public String getCardNo() {
-        return CardNo;
-    }
-
-    public String getOperatorName() {
-        return OperatorName;
-    }
-
-    public String getMachineNo() {
-        return MachineNo;
-    }
-
-    public int getWaferNoList() {
-        return WaferNoList;
-    }
-
-    public String getWaferName() {
-        return WaferName;
-    }
-
     private String LotNo;
     private String CardNo;
     private String OperatorName;
@@ -40,14 +16,6 @@ public class LotDat {
 
     private String WaferName;
     private byte WaferSize;
-
-    public String getOrientationFlatAngle() {
-        return OrientationFlatAngle;
-    }
-
-    public void setOrientationFlatAngle(String orientationFlatAngle) {
-        OrientationFlatAngle = orientationFlatAngle;
-    }
 
     private String OrientationFlatAngle;
     private String XIndexingSize;
@@ -94,8 +62,20 @@ public class LotDat {
     private String cassetteInformation;
     private String ProberModelInformation;
 
+    public String getLotNo() {
+        return LotNo;
+    }
+
+    public String getWaferName() {
+        return WaferName;
+    }
+
+    public String getOrientationFlatAngle() {
+        return OrientationFlatAngle;
+    }
+
     public LotDat read(String file) throws IOException {
-        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
+        DataInputStream dis = new DataInputStream(new FileInputStream(file));
         byte[] bytes = new byte[200];
         //Problem 如果前面bytes实际值比较大，会代入到下面的bytes中
         dis.read(bytes, 0, 25);

@@ -47,7 +47,6 @@ public class WaferDat {
     }
 
 
-
     public int getXMaximun() {
         return XMaximun;
     }
@@ -97,7 +96,8 @@ public class WaferDat {
 
         XMinimin = Integer.MAX_VALUE;
         XMaximun = Integer.MIN_VALUE;
-        Map<Byte, Integer> binMap = new HashMap<>();
+//        BinData binData = new
+        Map<Integer, Integer> binMap = new HashMap<>();
         for (int i = 0; i < lineNumber; i++) {
             LineData lineData = new LineData();
             int X = EndianUtils.readSwappedShort(dis);
@@ -125,7 +125,7 @@ public class WaferDat {
                 } else {
                     dieData.setPassOrFail("P");
                 }
-                binMap.put(binByte, binMap.getOrDefault(binByte, 0) + 1);
+                binMap.put(binInt, binMap.getOrDefault(binInt, 0) + 1);
                 String ch = String.valueOf(lowInt);
                 if (binByte == 0) {
                     ch = ".";
@@ -137,9 +137,26 @@ public class WaferDat {
             lineData.setLines(lineDies);
             records.add(lineData);
         }
-        binMap.remove((byte)0);
+
+        List<BinData> binList = new ArrayList<>();
+        for (Map.Entry<Integer, Integer> entry : binMap.entrySet()) {
+            byte binNo = (byte) (entry.getKey() & 0xFF);
+            if (binNo == 0x00) {
+                continue;
+            } else {
+                BinData binData = new BinData(binNo, entry.getValue());
+                if ((entry.getKey() >> 8 & 0x01) == 1) {
+                    binData.setDieAttribute("F");
+                } else {
+                    binData.setDieAttribute("P");
+                }
+                binList.add(binData);
+            }
+        }
+
         mapData.setRecords(records);
         mapData.setBinMap(binMap);
+        mapData.setBinData(binList);
         setMapData(mapData);
 
         byte b = dis.readByte();

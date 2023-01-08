@@ -2,6 +2,7 @@ package tel2mapping;
 
 import tel2mapping.dat.LotDat;
 import tel2mapping.dat.WaferDat;
+import tel2mapping.dat.subentity.BinData;
 import tel2mapping.dat.subentity.DieData;
 import tel2mapping.dat.subentity.LineData;
 
@@ -10,10 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ReadP8File {
     public static void main(String[] args) throws IOException {
@@ -27,14 +25,14 @@ public class ReadP8File {
 //        dis.read(c);//18 2 0
 //        dis.read(d);//116 -49 1
 
-        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\ON2201104AA\\LOT2.DAT";
+        String file = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
 //        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
 
         LotDat lotDat = new LotDat();
         lotDat = lotDat.read(file);
 
 
-        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\ON2201104AA\\Q2BX73-14C22.DAT";
+        String file2 = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
 //        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
         WaferDat waferDat = new WaferDat();
         waferDat = waferDat.read(file2);
@@ -109,26 +107,36 @@ public class ReadP8File {
         writer.newLine();
         writer.write("========================================================");
         writer.newLine();
-//        for (int i = 0; i < 10; i++) {
-//            writer.write("BIN   " + i + " =");//TODO Quan Yield P/F
-//            writer.newLine();
-//        }
-        Map<Byte, Integer> map = waferDat.getMapData().getBinMap();
+
+        Map<Integer, Integer> map = waferDat.getMapData().getBinMap();
         map = sortMapByKey(map);
         String binQuanYield;
-        for (Map.Entry<Byte, Integer> entry : map.entrySet()) {
-            Byte key = entry.getKey();
-            double binYield = ((double) entry.getValue()) / waferDat.getTestTotal().getTestTotal() * 100;
+//        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+//            Integer key = entry.getKey();
+//            double binYield = ((double) entry.getValue()) / waferDat.getTestTotal().getTestTotal() * 100;
+//
+//
+//            String PFFlag = "F";
+//            if ((key >> 8 & 0x01) == 1) {
+//                PFFlag = "F";
+//            } else {
+//                PFFlag = "P";
+//            }
+//            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s", entry.getKey(), entry.getValue(), binYield, PFFlag);
+//            writer.write(binQuanYield);
+//            writer.newLine();
+//        }
+        List<BinData> binList = waferDat.getMapData().getBinData();
+        for (BinData bindata : binList) {
+            Integer binNum = Integer.valueOf(bindata.getBinBytes());
+            double binYield = ((double) bindata.getBinNum()) / waferDat.getTestTotal().getTestTotal() * 100;
 
-            String PFFlag = "F";
-            if (entry.getKey() == 0b00000001) {
-                PFFlag = "P";
-            } else {
-                PFFlag = "F";
-            }
-            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s", entry.getKey(), entry.getValue(), binYield, PFFlag);
+
+            String PFFlag = bindata.getDieAttribute();
+            binQuanYield = String.format("BIN %3d = %6d %6.2f %3s", binNum, bindata.getBinNum(), binYield, PFFlag);
             writer.write(binQuanYield);
             writer.newLine();
+
         }
 
 
@@ -169,13 +177,13 @@ public class ReadP8File {
      * @param map
      * @return
      */
-    public static Map<Byte, Integer> sortMapByKey(Map<Byte, Integer> map) {
+    public static Map<Integer, Integer> sortMapByKey(Map<Integer, Integer> map) {
         if (map == null || map.isEmpty()) {
             return null;
         }
 //        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
-        Map<Byte, Integer> sortMap = new TreeMap<Byte, Integer>(new Comparator<Byte>() {
-            public int compare(Byte obj1, Byte obj2) {
+        Map<Integer, Integer> sortMap = new TreeMap<Integer, Integer>(new Comparator<Integer>() {
+            public int compare(Integer obj1, Integer obj2) {
                 return obj1.compareTo(obj2);//升序排序
             }
         });
