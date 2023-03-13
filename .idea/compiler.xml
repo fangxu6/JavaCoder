@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-fiftyerrors" />
         <module name="java-coder" />
-        <module name="MavenPackageTest" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

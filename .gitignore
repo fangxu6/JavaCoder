@@ -1,3 +1,4 @@
 # Project exclude paths
 /java-coder/src/main/java/com/gougou/processesonly/
 /target/
+/filters/

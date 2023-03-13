@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,7 +47,7 @@ public class HttpUtil {
     }
 
     private static CloseableHttpClient getNoSSLConnection() {
-        CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(getConfig()).build();
+        CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(getConfig()).setRetryHandler(new DefaultHttpRequestRetryHandler(0,false)).build();
         return httpClient;
     }
 
