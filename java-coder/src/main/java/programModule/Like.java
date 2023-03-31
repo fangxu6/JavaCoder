@@ -15,14 +15,14 @@
  * limitations under the License.
  */
 
-package tips;
+package programModule;
 
 /**
  * Utilities for converting SQL {@code LIKE} and {@code SIMILAR} operators
  * to regular expressions.
  */
 public class Like {
-    //这边 可读性
+    //这边 可读性 imp
     private static final String JAVA_REGEX_SPECIALS = "[]()|^-+*?{}$\\";
     private static final String SQL_SIMILAR_SPECIALS = "[]()|^-+*_%?{}";
     private static final String [] REG_CHAR_CLASSES = {
