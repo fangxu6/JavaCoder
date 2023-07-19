@@ -9,7 +9,7 @@ package tel2mapping.dat;
  * @Author:fangxu6@gmail.com
  */
 public enum OrientatioFlatAngleEnum {
-    TOP(0),RIGHT(90),DOWN(180),LEFT(270);
+    U(0),R(90),D(180),L(270);
     private int value;
     private OrientatioFlatAngleEnum(int value) {
         this.value = value;

@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-fiftyerrors" />
         <module name="java-coder" />
+        <module name="ZipAndFtp" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
