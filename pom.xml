@@ -14,7 +14,7 @@
     <modules>
         <module>spring-fiftyerrors</module>
         <module>java-coder</module>
-        <module>properties-test</module>
+        <module>spring-fiftyerrors</module>
     </modules>
 
     <properties>

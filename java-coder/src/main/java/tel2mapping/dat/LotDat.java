@@ -4,7 +4,6 @@ import tel2mapping.dat.subentity.CassetteInformation;
 import tel2mapping.dat.subentity.TestTotal;
 
 import java.io.*;
-import java.util.Date;
 import java.util.List;
 
 public class LotDat {
@@ -90,6 +89,7 @@ public class LotDat {
         dis.skipBytes(50 * 2);
         dis.read(bytes, 0, 12);
         WaferName = new String(bytes).trim();
+
 
         WaferSize = dis.readByte();
         dis.read(bytes, 0, 3);
