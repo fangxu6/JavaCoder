@@ -14,7 +14,7 @@
     <modules>
         <module>spring-fiftyerrors</module>
         <module>java-coder</module>
-        <module>spring-fiftyerrors</module>
+        <module>ZipAndFtp</module>
     </modules>
 
     <properties>

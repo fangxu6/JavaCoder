@@ -1,11 +1,11 @@
 package com.gougou.lesson77.templateobserver.collection;
 
-public class Student {
+public class Student2 {
     private String name;
     private int age;
     private float score;
 
-    public Student(String name, int age, float score) {
+    public Student2(String name, int age, float score) {
         this.name = name;
         this.age = age;
         this.score = score;

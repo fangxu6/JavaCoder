@@ -1,0 +1,13 @@
+util\XJZipUtil.class
+mybatis\mapper\StudentMapper.class
+AisinochipZipAndFtp.class
+util\ConfigUtil.class
+ApacheConfigTest.class
+Test2.class
+util\FTPUtil.class
+ZipAndFtp.class
+bean\AisinochipDataLogFileFormat.class
+bean\FTPInfo.class
+bean\DataLogFileFormat.class
+util\XJSplitUtil.class
+mybatis\entity\Student.class
