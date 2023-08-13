@@ -10,10 +10,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA
@@ -26,9 +23,14 @@ public class StudentMapperTest {
 
     @BeforeClass
     public static void init() {
+        Properties properties = null;
         try {
             Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+
+            properties = new Properties();
+            properties.load(reader);
+            properties.setProperty("jdbc.password","Zhz@159357");
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,properties);
         } catch (IOException e) {
             e.printStackTrace();
         }

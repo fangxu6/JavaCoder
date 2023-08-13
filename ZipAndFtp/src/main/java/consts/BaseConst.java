@@ -10,8 +10,8 @@ package consts;
  */
 public class BaseConst {
 
-    public static final String MYBATIS_CONF= "com/gblfy/conf/mybatis-conf.xml";
-    public static final String MYBATIS_DB_CONF= "com/gblfy/conf/db.properties";
+    public static final String MYBATIS_CONF= "mybatis-config.xml";
+    public static final String MYBATIS_DB_CONF= "db.properties";
     public static final String DB_ENCRYPT_KEY= "PBDF692EB704D3FCDCEAD9F55FE87EGB";
     public static final String DB_PWD_KEY= "jdbc.password";
 }

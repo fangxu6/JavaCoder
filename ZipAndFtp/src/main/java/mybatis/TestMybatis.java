@@ -5,6 +5,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import util.SqlSessionFactoryUtil;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -21,15 +22,19 @@ import java.util.List;
 public class TestMybatis {
     private static SqlSessionFactory sqlSessionFactory;
     public static void main(String[] args) {
-        try {
-            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         SqlSession sqlSession = null;
         try {
+//            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
+            if (sqlSessionFactory == null) {
+                sqlSessionFactory = SqlSessionFactoryUtil.initSqlSessionFactory();
+            }
+//                    sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        SqlSession sqlSession = null;
+//        try {
             sqlSession = sqlSessionFactory.openSession();
 
             List<Student> students = sqlSession.selectList("selectAll");

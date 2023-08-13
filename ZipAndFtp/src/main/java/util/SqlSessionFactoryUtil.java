@@ -59,9 +59,8 @@ public class SqlSessionFactoryUtil {
         try {
             // 配置文件流 我这里配置文件做了特殊处理
             cfgStream = Resources.getResourceAsStream(BaseConst.MYBATIS_CONF);
-//            #配置文件在resource目录下面采用这种方式
-//            #cfgStream = Resources.getResourceAsStream("mybatis-config.xml");
             // 获得阅读流
+//            cfgReader = Resources.getResourceAsReader("mybatis-config.xml");
             cfgReader = new InputStreamReader(cfgStream);
             // 读入属性文件 我这里配置文件做了特殊处理
             proStream = Resources.getResourceAsStream(BaseConst.MYBATIS_DB_CONF);
@@ -74,7 +73,7 @@ public class SqlSessionFactoryUtil {
             // 流装载进入属性集合
             properties.load(proReader);
             // 获取当前系统ENV
-            String key = "ASDF692EB704D3FCDCEAD9F55FE97EGB";
+            String key = "coXsBdByZT8De1rNiMl2qq==";
 //            String key = System.getenv("DB_ENCRYPT_KEY");
             // 进行解密
             String encryptPwd = properties.getProperty("jdbc.password");
