@@ -73,7 +73,7 @@ public class SqlSessionFactoryUtil {
             // 流装载进入属性集合
             properties.load(proReader);
             // 获取当前系统ENV
-            String key = "coXsBdByZT8De1rNiMl2qq==";
+            String key = "yoXsBdByZT8De1rNiMl2pw==";
 //            String key = System.getenv("DB_ENCRYPT_KEY");
             // 进行解密
             String encryptPwd = properties.getProperty("jdbc.password");
