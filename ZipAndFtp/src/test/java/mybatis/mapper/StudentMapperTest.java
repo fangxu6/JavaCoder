@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import util.SqlSessionFactoryUtil;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -24,21 +25,58 @@ public class StudentMapperTest {
     @BeforeClass
     public static void init() {
         Properties properties = null;
+//        try {
+//            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
+//
+//            properties = new Properties();
+//            properties.load(reader);
+//            properties.setProperty("jdbc.password","Zhz@159357");
+//            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,properties);
         try {
-            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
-
-            properties = new Properties();
-            properties.load(reader);
-            properties.setProperty("jdbc.password","Zhz@159357");
-            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,properties);
-        } catch (IOException e) {
+//            Reader reader = Resources.getResourceAsReader("mybatis-config.xml");
+            if (sqlSessionFactory == null) {
+                sqlSessionFactory = SqlSessionFactoryUtil.initSqlSessionFactory();
+            }
+//            sqlSession = sqlSessionFactory.openSession();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+    @Test
+    public void addStudent() {
+
+        Student student = new Student();
+        student.setEmail("11@test.com");
+        student.setName("11test");
+        student.setLocked((byte) 0);
+        student.setSex((byte)1);
+        student.setGmtCreated(new Date());
+
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = sqlSessionFactory.openSession();
+
+            StudentMapper studentMapper = (StudentMapper) sqlSession.getMapper(StudentMapper.class);
+            int i1 = studentMapper.addStudent(student);
+            sqlSession.commit();
+            System.out.println("aaaaaaaaaaaaaaaa"+i1+"bbbbbbbbbbbbb");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+
+    }
     @Test
     public void testSelectList() {
         SqlSession sqlSession = null;
+        if (sqlSessionFactory == null) {
+            sqlSessionFactory = SqlSessionFactoryUtil.initSqlSessionFactory();
+        }
         try {
             sqlSession = sqlSessionFactory.openSession();
 

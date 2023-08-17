@@ -45,4 +45,12 @@
     sex=#{sex, jdbcType=VARCHAR}, locked=#{locked, jdbcType=VARCHAR}
     where student_id=#{studentId, jdbcType=INTEGER}
   </update>
+  <insert id="addStudent"  parameterType="mybatis.entity.Student">
+    <selectKey keyProperty="studentId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    INSERT INTO jse.student ( name, phone, email, sex, locked, gmt_created) VALUES
+    ( #{name, jdbcType=VARCHAR}, #{phone, jdbcType=VARCHAR}, #{email, jdbcType=VARCHAR},
+    #{sex, jdbcType=VARCHAR}, #{locked, jdbcType=VARCHAR}, #{gmtCreated, jdbcType=TIMESTAMP})
+  </insert>
 </mapper>

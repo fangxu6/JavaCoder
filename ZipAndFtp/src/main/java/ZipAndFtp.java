@@ -130,7 +130,7 @@ public class ZipAndFtp {
         String zipDir = config.getString("datalogfilePath");
 //        String absolutePath = FileUtil.getAbsolutePath(inDir);
 //        List<File> files = FileUtil.loopFiles(inDir);
-        Collection<File> files = FileUtils.listFiles(new File(zipDir), new String[]{"xls", "cvs", "STD"}, false);
+        Collection<File> files = FileUtils.listFiles(new File(zipDir), new String[]{"xls", "csv", "STD"}, false);
         Iterator<File> it = files.iterator();
         List<String> FTDataLogFileList = new ArrayList<>();
         while (it.hasNext()) {

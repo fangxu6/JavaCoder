@@ -19,6 +19,9 @@ public interface StudentMapper {
 
     int updateByPrimaryKey(Student student);
 
+    int addStudent(Student student);
+
+
     /**
      * 获取一段时间内的用户
      * @param params

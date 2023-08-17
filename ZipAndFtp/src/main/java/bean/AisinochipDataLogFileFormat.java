@@ -11,64 +11,36 @@ import java.util.List;
  * @since 2023/6/26 15:13
  */
 public class AisinochipDataLogFileFormat {
-    private String custCode;
+    private String deviceName;
 
     private String batchNo;
 
     private String flowNo;
 
-    private String workFlowCode;
+    private String waferID;
 
     private String workFlowNo;
 
-    public AisinochipDataLogFileFormat(String custCode, String batchNo, String flowNo, String workFlowCode, String workFlowNo) {
-        this.custCode = custCode;
+    public AisinochipDataLogFileFormat(String deviceName, String batchNo, String flowNo, String waferID, String workFlowNo) {
+        this.deviceName = deviceName;
         this.batchNo = batchNo;
         this.flowNo = flowNo;
-        this.workFlowCode = workFlowCode;
+        this.waferID = waferID;
         this.workFlowNo = workFlowNo;
     }
 
-    public AisinochipDataLogFileFormat(String batchNo, String flowNo, String workFlowCode, String workFlowNo) {
-        this.batchNo = batchNo;
-        this.flowNo = flowNo;
-        this.workFlowCode = workFlowCode;
-        this.workFlowNo = workFlowNo;
-    }
+
 
     public boolean checkFormat(List<String> custCodeList, List<String> workFlowCodeList) {
-        if (!custCodeList.contains(custCode)) {
+        //工作流校验CP1 CP2 CP3
+        if (!workFlowCodeList.contains(this.flowNo)) {
             return false;
-        }
-        //batchNo校验 pass
-        //flowNo校验
-        Integer flowNoCheck = null;
-        try {
-            flowNoCheck = Integer.valueOf(flowNo);
-        } catch (NumberFormatException ex) {
-//            ex.printStackTrace();
-            return false;
-        }
-        if (flowNoCheck < 1 || flowNoCheck > 99) {
-            return false;
-        }
-        //工作流校验
-        if (!workFlowCodeList.contains(workFlowCode)) {
-            return false;
-        } else {
-            //工作流水号校验
-            if (workFlowCode.substring(0, 2) == "FT") {
-                Integer workFlowNoCheck = Integer.valueOf(workFlowCode.substring(2));
-                if (workFlowNoCheck < 1 || workFlowNoCheck > 99) {
-                    return false;
-                }
-            }
         }
         return true;
     }
 
     public String getCustCode() {
-        return custCode;
+        return deviceName;
     }
 
     public String getBatchNo() {
@@ -80,7 +52,7 @@ public class AisinochipDataLogFileFormat {
     }
 
     public String getWorkFlowCode() {
-        return workFlowCode;
+        return waferID;
     }
 
     public String getWorkFlowNo() {

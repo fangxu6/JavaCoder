@@ -98,24 +98,4 @@ public class AES256Utils {
 
         return originalString;
     }
-
-
-    public static void main(String[] args) throws UnsupportedEncodingException {
-
-        String data2 = "123456";
-        // 初始化密钥
-        String skey = "yoXsBdByZT8De1rNiMl2pw==";
-        try {
-
-            // 信息加密
-            String decryptkey = AES256Utils.encrypt(data2, skey);
-            System.out.println("加密后的key值:" + decryptkey);
-
-            // 解密数据
-            String data = AES256Utils.decrypt(decryptkey, skey);
-            System.out.println("解密后的key值:" + data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

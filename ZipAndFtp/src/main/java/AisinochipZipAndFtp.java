@@ -51,8 +51,8 @@ public class AisinochipZipAndFtp {
             } else {
                 System.out.println("upload file.");
                 logger.info("upload file.");
-//                ftpUpload(zipFileList);
-                moveZipList2TargetDir(zipFileList);
+                ftpUpload(zipFileList);
+//                moveZipList2TargetDir(zipFileList);
             }
 
         } else if (period.equalsIgnoreCase("PREDAY")) {
@@ -63,8 +63,8 @@ public class AisinochipZipAndFtp {
             } else {
                 System.out.println("upload file.");
                 logger.info("upload file.");
-//                ftpUpload(zipFileList);
-                moveZipList2TargetDir(zipFileList);
+                ftpUpload(zipFileList);
+//                moveZipList2TargetDir(zipFileList);
             }
 
         }
@@ -108,7 +108,7 @@ public class AisinochipZipAndFtp {
         ftpInfo.getFTPINFOConfig(ftpConfigFile);
         for (String zipFile : zipFileList) {
             FTPUtil.upload(ftpInfo, zipFile);
-//            logger.info(zipFile);
+            logger.info(zipFile);
         }
 
     }
@@ -124,17 +124,16 @@ public class AisinochipZipAndFtp {
             throw new RuntimeException(e);
         }
         List<String> custCodeList = config.getList(String.class, "custCode");
-        List<String> workFlowList = config.getList(String.class, "workFlow");
+        List<String> workFlowList = config.getList(String.class, "CPWorkFlow");
 
         //文件名校验
         String zipDir = config.getString("datalogfilePath");
 
         List<String> extentionNameList = config.getList(String.class, "extentionName");
-//        String absolutePath = FileUtil.getAbsolutePath(inDir);
-//        List<File> files = FileUtil.loopFiles(inDir);
+        //不递归处理，只在zipDir匹配文件
         Collection<File> files = FileUtils.listFiles(new File(zipDir),
                 Arrays.stream(extentionNameList.toArray()).toArray(String[]::new),
-                false);
+                true);
         Iterator<File> it = files.iterator();
         List<String> FTDataLogFileList = new ArrayList<>();
         while (it.hasNext()) {
@@ -170,7 +169,11 @@ public class AisinochipZipAndFtp {
             String fileName = iterator.next();
 
             nameWithoutExtensionCurrent = Files.getNameWithoutExtension(fileName);
-            if (nameWithoutExtensionCurrent.equals(nameWithoutExtensionPre) && iterator.hasNext()) {
+//            nameWithoutExtensionCurrent.
+            String[] split = nameWithoutExtensionCurrent.split("-", 5);
+            String[] split2 = nameWithoutExtensionPre.split("-", 5);
+//            Arrays.stream(split).limit(3).toString();
+            if (split[0].equals(split2[0]) && split[1].equals(split2[1]) && split[2].equals(split2[2]) && split[3].equals(split2[3]) && iterator.hasNext()) {
                 waitingZipFileList.add(zipDir + "\\" + fileName);
             } else {
                 if (!iterator.hasNext()) {
@@ -199,9 +202,9 @@ public class AisinochipZipAndFtp {
 //            return;
 //        }
         AisinochipDataLogFileFormat dataLogFileFormat = new AisinochipDataLogFileFormat(dataLogFileList.get(0), dataLogFileList.get(1), dataLogFileList.get(2), dataLogFileList.get(3), dataLogFileList.get(4));
-//        boolean isCheckOut = dataLogFileFormat.checkFormat(custCodeList, workFlowList);
-//        if (isCheckOut) {
-        ftDataLogFileList.add(fileNmae);
-//        }
+        boolean isCheckOut = dataLogFileFormat.checkFormat(custCodeList, workFlowList);
+        if (isCheckOut) {
+            ftDataLogFileList.add(fileNmae);
+        }
     }
 }
