@@ -121,10 +121,5 @@ public class SqlSessionFactoryUtil {
 //        SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(is);
 //        return sessionFactory.openSession();
 //    }
-    public static void main(String[] args) {
-        String key = System.getenv("DB_ENCRYPT_KEY");
-        System.out.println("获取环境变量中的加密key: " + key);
-    }
-
 
 }
