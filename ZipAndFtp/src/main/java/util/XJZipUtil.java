@@ -16,6 +16,15 @@ import java.util.List;
  * @since 2023/6/21 15:15
  */
 public class XJZipUtil {
+//    public static void zipMultiFiles(List<File> fileList, String outPath) {
+//        File[] files = new File[fileList.size()];
+//        for (int i = 0; i < fileList.size(); i++) {
+//            files[i] = FileUtil.file(fileList.get(i));
+//        }
+//
+//        ZipUtil.zip(FileUtil.file(outPath),false,files);
+//    }
+
     public static void zipMultiFiles(List<String> fileList, String outPath) {
         File[] files = new File[fileList.size()];
         for (int i = 0; i < fileList.size(); i++) {

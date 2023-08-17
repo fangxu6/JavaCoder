@@ -2,6 +2,7 @@ import bean.AisinochipDataLogFileFormat;
 import bean.DataLogFileFormat;
 import bean.FTPInfo;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ZipUtil;
 import com.google.common.io.Files;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -43,31 +44,31 @@ public class AisinochipZipAndFtp {
             throw new RuntimeException(e);
         }
         String period = config.getString("period");
-        if (period.equalsIgnoreCase("ALL")) {
-            List<String> zipFileList = zipDataLogFile(period);
-            if (zipFileList.size() == 0) {
-                System.out.println("no zip file generated.");
-                logger.info("no zip file generated.");
-            } else {
-                System.out.println("upload file.");
-                logger.info("upload file.");
-                ftpUpload(zipFileList);
+//        if (period.equalsIgnoreCase("ALL")) {
+        List<String> zipFileList = zipDataLogFile(period);
+        if (zipFileList.size() == 0) {
+            System.out.println("no zip file generated.");
+            logger.info("no zip file generated.");
+        } else {
+            System.out.println("upload file.");
+            logger.info("upload file.");
+            ftpUpload(zipFileList);
 //                moveZipList2TargetDir(zipFileList);
-            }
-
-        } else if (period.equalsIgnoreCase("PREDAY")) {
-            List<String> zipFileList = zipDataLogFile(period);
-            if (zipFileList.size() == 0) {
-                System.out.println("no zip file generated.");
-                logger.info("no zip file generated.");
-            } else {
-                System.out.println("upload file.");
-                logger.info("upload file.");
-                ftpUpload(zipFileList);
-//                moveZipList2TargetDir(zipFileList);
-            }
-
         }
+
+//        } else if (period.equalsIgnoreCase("PREDAY")) {
+//            List<String> zipFileList = zipDataLogFile(period);
+//            if (zipFileList.size() == 0) {
+//                System.out.println("no zip file generated.");
+//                logger.info("no zip file generated.");
+//            } else {
+//                System.out.println("upload file.");
+//                logger.info("upload file.");
+//                ftpUpload(zipFileList);
+////                moveZipList2TargetDir(zipFileList);
+//            }
+
+//        }
 
     }
 
@@ -135,7 +136,7 @@ public class AisinochipZipAndFtp {
                 Arrays.stream(extentionNameList.toArray()).toArray(String[]::new),
                 true);
         Iterator<File> it = files.iterator();
-        List<String> FTDataLogFileList = new ArrayList<>();
+        List<File> FTDataLogFileList = new ArrayList<>();
         while (it.hasNext()) {
             File dataLogFile = it.next();
             if (dataLogFile.isFile()) {
@@ -158,53 +159,72 @@ public class AisinochipZipAndFtp {
             return new ArrayList<>();
         }
         Collections.sort(FTDataLogFileList);
-        String filePre = FTDataLogFileList.get(0);
+        String filePre = FTDataLogFileList.get(0).getName();
         String nameWithoutExtensionPre = Files.getNameWithoutExtension(filePre);
         String nameWithoutExtensionCurrent;
 
-        List<String> waitingZipFileList = new ArrayList<>();
+        List<File> waitingZipFileList = new ArrayList<>();
         List<String> zipList = new ArrayList<>();
-        Iterator<String> iterator = FTDataLogFileList.iterator();
+        Iterator<File> iterator = FTDataLogFileList.iterator();
+        List<String> fileNameList = new ArrayList<>();
         while (iterator.hasNext()) {
-            String fileName = iterator.next();
+            File datalogFile = iterator.next();
+            String fileName = datalogFile.getName();
 
             nameWithoutExtensionCurrent = Files.getNameWithoutExtension(fileName);
 //            nameWithoutExtensionCurrent.
             String[] split = nameWithoutExtensionCurrent.split("-", 5);
             String[] split2 = nameWithoutExtensionPre.split("-", 5);
+
 //            Arrays.stream(split).limit(3).toString();
             if (split[0].equals(split2[0]) && split[1].equals(split2[1]) && split[2].equals(split2[2]) && split[3].equals(split2[3]) && iterator.hasNext()) {
-                waitingZipFileList.add(zipDir + "\\" + fileName);
+
+                waitingZipFileList.add(datalogFile);
+                if (fileNameList.size() > 0 && fileNameList.contains(fileName)) {
+                    waitingZipFileList.remove(datalogFile);
+                } else {
+                    fileNameList.add(fileName);
+                }
             } else {
                 if (!iterator.hasNext()) {
                     String lastFileName = fileName;
-                    waitingZipFileList.add(zipDir + "\\" + lastFileName);
+                    waitingZipFileList.add(datalogFile);
+                    if (fileNameList.size() > 0 && fileNameList.contains(fileName)) {
+                        waitingZipFileList.remove(datalogFile);
+                    } else {
+                        fileNameList.add(fileName);
+                    }
                 }
                 String zipFile = zipDir + "\\" + nameWithoutExtensionPre + "." + "zip";
-                XJZipUtil.zipMultiFiles(waitingZipFileList, zipFile);
+//                File[] listArray = (File[]) waitingZipFileList.toArray();
+                File[] fileArray = waitingZipFileList.stream().toArray(File[]::new);
+                ZipUtil.zip(FileUtil.file(zipFile), false, fileArray);
+//                XJZipUtil.zipMultiFiles(waitingZipFileList, zipFile);
                 zipList.add(zipFile);
                 waitingZipFileList.clear();
-                waitingZipFileList.add(zipDir + "\\" + fileName);
+                fileNameList.clear();
+                waitingZipFileList.add(datalogFile);
             }
+
             nameWithoutExtensionPre = nameWithoutExtensionCurrent;
         }
         return zipList;
     }
 
-    private static void add2FTDataLogFileList(List<String> ftDataLogFileList, File dataLogFile, List<String> custCodeList, List<String> workFlowList) {
+    private static void add2FTDataLogFileList(List<File> ftDataLogFileList, File dataLogFile, List<String> custCodeList, List<String> workFlowList) {
         String fileNmae = dataLogFile.getName();
         logger.info("fileName:" + fileNmae);
         String nameWithoutExtension = Files.getNameWithoutExtension(fileNmae);
         logger.info("nameWithoutExtension:" + Files.getNameWithoutExtension(fileNmae));
         List<String> dataLogFileList = XJSplitUtil.split(nameWithoutExtension, '-');
-        logger.info(dataLogFileList.toString());
-//        if (dataLogFileList.size() > 5 || dataLogFileList.size() < 5) {
-//            return;
-//        }
+        logger.info("name:"+dataLogFileList.toString());
+        if ( dataLogFileList.size() < 5) {
+            return;
+        }
         AisinochipDataLogFileFormat dataLogFileFormat = new AisinochipDataLogFileFormat(dataLogFileList.get(0), dataLogFileList.get(1), dataLogFileList.get(2), dataLogFileList.get(3), dataLogFileList.get(4));
         boolean isCheckOut = dataLogFileFormat.checkFormat(custCodeList, workFlowList);
         if (isCheckOut) {
-            ftDataLogFileList.add(fileNmae);
+            ftDataLogFileList.add(dataLogFile);
         }
     }
 }

@@ -33,7 +33,7 @@ public class AisinochipDataLogFileFormat {
 
     public boolean checkFormat(List<String> custCodeList, List<String> workFlowCodeList) {
         //工作流校验CP1 CP2 CP3
-        if (!workFlowCodeList.contains(this.flowNo)) {
+        if (!workFlowCodeList.contains(this.flowNo.toUpperCase())) {
             return false;
         }
         return true;
