@@ -1,9 +1,9 @@
 import bean.AisinochipDataLogFileFormat;
-import bean.DataLogFileFormat;
 import bean.FTPInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ZipUtil;
 import com.google.common.io.Files;
+import mybatis.service.DatalogUploadRecordIml;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import util.ConfigUtil;
 import util.FTPUtil;
 import util.XJSplitUtil;
-import util.XJZipUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +33,9 @@ public class AisinochipZipAndFtp {
 
     public static void main(String[] args) {
 
+        logger.info("starting...");
         File zipPeriodFile = new File(System.getProperty("user.dir") + "/res/zipPeriod.properties");
-        System.out.println(zipPeriodFile.getAbsolutePath());
+        logger.info(zipPeriodFile.getAbsolutePath());
         ConfigUtil configUtil = new ConfigUtil();
         Configuration config = null;
         try {
@@ -47,10 +47,8 @@ public class AisinochipZipAndFtp {
 //        if (period.equalsIgnoreCase("ALL")) {
         List<String> zipFileList = zipDataLogFile(period);
         if (zipFileList.size() == 0) {
-            System.out.println("no zip file generated.");
             logger.info("no zip file generated.");
         } else {
-            System.out.println("upload file.");
             logger.info("upload file.");
             ftpUpload(zipFileList);
 //                moveZipList2TargetDir(zipFileList);
@@ -108,8 +106,12 @@ public class AisinochipZipAndFtp {
         File ftpConfigFile = new File(System.getProperty("user.dir") + "/res/ftp.properties");
         ftpInfo.getFTPINFOConfig(ftpConfigFile);
         for (String zipFile : zipFileList) {
-            FTPUtil.upload(ftpInfo, zipFile);
-            logger.info(zipFile);
+            boolean upload = FTPUtil.upload(ftpInfo, zipFile);
+//            if (upload) {
+//                DatalogUploadRecordIml.updateByZipFile(zipFile);
+//            }
+
+
         }
 
     }
@@ -198,7 +200,9 @@ public class AisinochipZipAndFtp {
                 String zipFile = zipDir + "\\" + nameWithoutExtensionPre + "." + "zip";
 //                File[] listArray = (File[]) waitingZipFileList.toArray();
                 File[] fileArray = waitingZipFileList.stream().toArray(File[]::new);
+
                 ZipUtil.zip(FileUtil.file(zipFile), false, fileArray);
+                DatalogUploadRecordIml.insertIntoTable(nameWithoutExtensionPre + "." + "zip", waitingZipFileList); //初始化表
 //                XJZipUtil.zipMultiFiles(waitingZipFileList, zipFile);
                 zipList.add(zipFile);
                 waitingZipFileList.clear();
@@ -217,8 +221,8 @@ public class AisinochipZipAndFtp {
         String nameWithoutExtension = Files.getNameWithoutExtension(fileNmae);
         logger.info("nameWithoutExtension:" + Files.getNameWithoutExtension(fileNmae));
         List<String> dataLogFileList = XJSplitUtil.split(nameWithoutExtension, '-');
-        logger.info("name:"+dataLogFileList.toString());
-        if ( dataLogFileList.size() < 5) {
+        logger.info("name:" + dataLogFileList.toString());
+        if (dataLogFileList.size() < 5) {
             return;
         }
         AisinochipDataLogFileFormat dataLogFileFormat = new AisinochipDataLogFileFormat(dataLogFileList.get(0), dataLogFileList.get(1), dataLogFileList.get(2), dataLogFileList.get(3), dataLogFileList.get(4));

@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface DatalogUploadRecordMapper {
+
+    DatalogUploadRecord selectByZipFileName(String zipFileName);
+
     int addDatalogUploadRecord(DatalogUploadRecord datalogUploadRecord);
+
+    int updateByPrimaryKey(DatalogUploadRecord datalogUploadRecord);
+
 
 }

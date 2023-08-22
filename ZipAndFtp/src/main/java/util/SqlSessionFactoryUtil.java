@@ -73,12 +73,13 @@ public class SqlSessionFactoryUtil {
             // 流装载进入属性集合
             properties.load(proReader);
             // 获取当前系统ENV TODO 需要手工改
-            String key = "coXsBdByZT8De1rNiMl2qq==";
-//            String key = System.getenv("DB_ENCRYPT_KEY");
-            // 进行解密
-            String encryptPwd = properties.getProperty("jdbc.password");
-            String decrypt = AES256Utils.decrypt(encryptPwd, key);
+//            String key = "coXsBdByZT8De1rNiMl2qq==";
+////            String key = System.getenv("DB_ENCRYPT_KEY");
+//            // 进行解密
+//            String encryptPwd = properties.getProperty("jdbc.password");
+//            String decrypt = AES256Utils.decrypt(encryptPwd, key);
 
+            String decrypt="Zhz@159357";
             properties.setProperty("jdbc.password", decrypt);
 //            properties.setProperty("password", Decode.decryptDecode(properties.getProperty("jdbc.password"), key));
         } catch (Exception e) {

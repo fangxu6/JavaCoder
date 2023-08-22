@@ -6,8 +6,15 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import util.SqlSessionFactoryUtil;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.*;
 
 /**
@@ -17,6 +24,9 @@ import java.util.*;
  * Time 20:40
  */
 public class DatalogUploadRecordMapperTest {
+    private static Logger logger = LoggerFactory.getLogger(DatalogUploadRecordMapperTest.class);
+
+
     private static SqlSessionFactory sqlSessionFactory;
 
     @BeforeClass
@@ -42,11 +52,17 @@ public class DatalogUploadRecordMapperTest {
 
 
     @Test
-    public void addDatalogUploadRecord() {
+    public void addDatalogUploadRecord() throws IOException {
+
+        Socket socket = new Socket();
+        socket.connect(new InetSocketAddress("192.168.5.244", 22));
+        InetAddress localAddress = socket.getLocalAddress();
+        socket.close();
 
         DatalogUploadRecord datalogUploadRecord = new DatalogUploadRecord();
-        datalogUploadRecord.setIp("192.168.5.11");
-        datalogUploadRecord.setZipFile("11test.zip");
+//        String hostAddress = InetAddress.getLocalHost().getHostAddress();
+        datalogUploadRecord.setIp(localAddress.getHostAddress());
+        datalogUploadRecord.setZipFile("33test.zip");
         datalogUploadRecord.setStatus(0);
         datalogUploadRecord.setDatalog1("11");
         datalogUploadRecord.setDatalog2("11");
@@ -61,10 +77,10 @@ public class DatalogUploadRecordMapperTest {
         try {
             sqlSession = sqlSessionFactory.openSession();
 
-            DatalogUploadRecordMapper studentMapper = (DatalogUploadRecordMapper) sqlSession.getMapper(DatalogUploadRecordMapper.class);
-            int i1 = studentMapper.addDatalogUploadRecord(datalogUploadRecord);
+            DatalogUploadRecordMapper datalogUploadRecordMapper = (DatalogUploadRecordMapper) sqlSession.getMapper(DatalogUploadRecordMapper.class);
+            int i1 = datalogUploadRecordMapper.addDatalogUploadRecord(datalogUploadRecord);
             sqlSession.commit();
-            System.out.println("aaaaaaaaaaaaaaaa" + i1 + "bbbbbbbbbbbbb");
+            logger.info("aaaaaaaaaaaaaaaa" + i1 + "bbbbbbbbbbbbb");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

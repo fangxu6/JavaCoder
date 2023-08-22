@@ -1,6 +1,9 @@
 package mybatis.entity;
 
 
+import java.io.File;
+import java.util.List;
+
 /**
  * className: DatalogUploadRecord
  * package: bean
@@ -164,5 +167,12 @@ public class DatalogUploadRecord {
                 ", updateTime=" + updateTime +
                 ", deleteTime=" + deleteTime +
                 '}';
+    }
+
+    public void setDatalogList(List<File> fileList) {
+        for (int i = 0; i < fileList.size(); i++) {
+
+
+        }
     }
 }

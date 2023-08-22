@@ -3,11 +3,18 @@ package util;
 import bean.FTPInfo;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.ftp.Ftp;
+import mybatis.entity.DatalogUploadRecord;
+import mybatis.mapper.DatalogUploadRecordMapper;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +30,7 @@ public class FTPUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FTPUtil.class);
 
+
     public static void main(String[] args) {
 //        文件压缩 ok
         String zipFile = "D:\\data\\datalog\\RABBIT-EMT683-CP3-16-230812-230234.zip";
@@ -36,7 +44,6 @@ public class FTPUtil {
         ftpInfo.getFTPINFOConfig(ftpFile);
         boolean upload = upload(ftpInfo, zipFile);
         logger.info(String.valueOf(upload));
-        System.out.println(upload);
 
 //        zipFile = "D:\\datalog\\iML-D23236-01-FT1-FT02.zip";
 //        upload = upload(ftpInfo, zipFile);
@@ -83,7 +90,9 @@ public class FTPUtil {
             }
             mkdir(ftp, subList);
 //            String destPath = ftpInfo.destPath;
-            return ftp.upload("", FileUtil.file(zipFile));
+            boolean upload = ftp.upload("", FileUtil.file(zipFile));
+            logger.info("upload status:" + upload + "; uploadfile:" + fileName);
+            return upload;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -120,4 +129,7 @@ public class FTPUtil {
         }
         return true;
     }
+
+
+
 }
