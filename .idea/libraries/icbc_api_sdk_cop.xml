@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="icbc-api-sdk-cop">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/icbc-api-sdk-cop.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

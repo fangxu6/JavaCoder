@@ -42,6 +42,7 @@ public class DatalogUploadRecordIml {
         Socket socket = new Socket();
         InetAddress localAddress;
         try {
+            //TODO
             socket.connect(new InetSocketAddress("192.168.5.244", 22));
             localAddress = socket.getLocalAddress();
             socket.close();

@@ -107,9 +107,9 @@ public class AisinochipZipAndFtp {
         ftpInfo.getFTPINFOConfig(ftpConfigFile);
         for (String zipFile : zipFileList) {
             boolean upload = FTPUtil.upload(ftpInfo, zipFile);
-//            if (upload) {
-//                DatalogUploadRecordIml.updateByZipFile(zipFile);
-//            }
+            if (upload) {
+                DatalogUploadRecordIml.updateByZipFile(zipFile);
+            }
 
 
         }

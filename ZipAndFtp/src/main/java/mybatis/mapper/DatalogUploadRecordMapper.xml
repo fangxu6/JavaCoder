@@ -3,7 +3,7 @@
 <mapper namespace="mybatis.mapper.DatalogUploadRecordMapper">
 
     <resultMap id="BaseResultMap" type="mybatis.entity.DatalogUploadRecord">
-        <id column="id" jdbcType="BIGINT" property="Id"/>
+        <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="ip" jdbcType="VARCHAR" property="ip"/>
         <result column="zipFile" jdbcType="VARCHAR" property="zipFile"/>
         <result column="status" jdbcType="SMALLINT" property="status"/>
@@ -25,11 +25,11 @@
         createTime,updateTime,deleteTime
     </sql>
 
-    <select id="selectByZipFileName" flushCache="true" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByZipFileName" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from jse.DatalogUploadRecord
-        where zipFile=#{zipFile, jdbcType=VARCHAR}
+        where zipFile=#{zipFile, jdbcType=VARCHAR}  order by id desc limit 1
     </select>
 
     <insert id="addDatalogUploadRecord" parameterType="mybatis.entity.DatalogUploadRecord">
