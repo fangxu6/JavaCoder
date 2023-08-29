@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.ftp.Ftp;
 import mybatis.entity.DatalogUploadRecord;
 import mybatis.mapper.DatalogUploadRecordMapper;
+import mybatis.service.DatalogUploadRecordIml;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
@@ -29,7 +30,6 @@ import java.util.List;
 public class FTPUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FTPUtil.class);
-
 
     public static void main(String[] args) {
 //        文件压缩 ok
@@ -76,7 +76,8 @@ public class FTPUtil {
 //            ftp = new Ftp("127.0.0.1", 21, "admin", "12345680", CharsetUtil.CHARSET_UTF_8, FtpMode.Passive);
 
             File zipFile = FileUtil.file(fileName);
-            String zipFileName = zipFile.getName();
+            //TODO 不同客户不同要求 下面的subList还很有可能报错
+            String zipFileName = zipFile.getName().toUpperCase();
             List<String> list = XJSplitUtil.split(zipFileName, '-');
             List<String> subList = new ArrayList<String>(list.subList(0, 4));
             String lastDir = String.join("-", subList);
@@ -88,6 +89,7 @@ public class FTPUtil {
             } else {
                 ftp.cd(destPath);
             }
+            // TODO 不同客户不同要求 下面的mkdir不应该放在这
             mkdir(ftp, subList);
 //            String destPath = ftpInfo.destPath;
             boolean upload = ftp.upload("", FileUtil.file(zipFile));
@@ -130,6 +132,35 @@ public class FTPUtil {
         return true;
     }
 
+
+    //Aisino FTP
+    public static void ftpUpload(List<String> zipFileList) {
+        FTPInfo ftpInfo = new FTPInfo();
+        File ftpConfigFile = new File(System.getProperty("user.dir") + "/res/ftp.properties");
+        ftpInfo.getFTPINFOConfig(ftpConfigFile);
+        for (String zipFile : zipFileList) {
+            boolean upload = FTPUtil.upload(ftpInfo, zipFile);
+            if (upload) {
+                DatalogUploadRecordIml.updateByZipFile(zipFile);
+            }
+        }
+    }
+
+    public static String getHostAddress() {
+        Socket socket = new Socket();
+        InetAddress localAddress;
+        try {
+            //TODO
+            socket.connect(new InetSocketAddress("192.168.5.244", 22));
+            localAddress = socket.getLocalAddress();
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String hostAddress = localAddress.getHostAddress();
+
+        return hostAddress;
+    }
 
 
 }

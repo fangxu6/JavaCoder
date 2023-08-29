@@ -42,7 +42,6 @@ public class ConfigUtil {
 //        } catch (ConfigurationException cex) {
 //            // Something went wrong
 //        }
-////       TODO fix
 //        return null;
     }
 }

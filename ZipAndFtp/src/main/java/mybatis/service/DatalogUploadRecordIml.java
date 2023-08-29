@@ -39,21 +39,10 @@ public class DatalogUploadRecordIml {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Socket socket = new Socket();
-        InetAddress localAddress;
-        try {
-            //TODO
-            socket.connect(new InetSocketAddress("192.168.5.244", 22));
-            localAddress = socket.getLocalAddress();
-            socket.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
 
         DatalogUploadRecord datalogUploadRecord = new DatalogUploadRecord();
 //        String hostAddress = InetAddress.getLocalHost().getHostAddress();
-        datalogUploadRecord.setIp(localAddress.getHostAddress());
+        datalogUploadRecord.setIp(FTPUtil.getHostAddress());
         datalogUploadRecord.setZipFile(zipFileName);
 //        datalogUploadRecord.setZipFile("33test.zip");
         datalogUploadRecord.setStatus(0);

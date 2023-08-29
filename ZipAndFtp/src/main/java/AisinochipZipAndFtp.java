@@ -1,24 +1,19 @@
 import bean.AisinochipDataLogFileFormat;
 import bean.FTPInfo;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ZipUtil;
 import com.google.common.io.Files;
+import lombok.extern.slf4j.Slf4j;
 import mybatis.service.DatalogUploadRecordIml;
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import util.ConfigUtil;
 import util.FTPUtil;
 import util.XJSplitUtil;
+import util.XJZipUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * className: ZipAndFtp
@@ -28,45 +23,28 @@ import java.util.*;
  * @author fangxu6@gmail.com
  * @since 2023/6/21 15:13
  */
+@Slf4j
 public class AisinochipZipAndFtp {
-    private static Logger logger = LoggerFactory.getLogger(AisinochipZipAndFtp.class);
 
     public static void main(String[] args) {
 
-        logger.info("starting...");
-        File zipPeriodFile = new File(System.getProperty("user.dir") + "/res/zipPeriod.properties");
-        logger.info(zipPeriodFile.getAbsolutePath());
-        ConfigUtil configUtil = new ConfigUtil();
-        Configuration config = null;
+        log.info("starting...");
+
+        List<String> zipFileList;
         try {
-            config = configUtil.getConfig(zipPeriodFile);
+            zipFileList = XJZipUtil.zipDataLogFile();
         } catch (ConfigurationException e) {
+            log.error(e.toString());
             throw new RuntimeException(e);
         }
-        String period = config.getString("period");
-//        if (period.equalsIgnoreCase("ALL")) {
-        List<String> zipFileList = zipDataLogFile(period);
-        if (zipFileList.size() == 0) {
-            logger.info("no zip file generated.");
+        if (zipFileList.isEmpty()) {
+            log.info("no zip file generated.");
         } else {
-            logger.info("upload file.");
-            ftpUpload(zipFileList);
+            log.info("upload file.");
+            FTPUtil.ftpUpload(zipFileList);
 //                moveZipList2TargetDir(zipFileList);
         }
 
-//        } else if (period.equalsIgnoreCase("PREDAY")) {
-//            List<String> zipFileList = zipDataLogFile(period);
-//            if (zipFileList.size() == 0) {
-//                System.out.println("no zip file generated.");
-//                logger.info("no zip file generated.");
-//            } else {
-//                System.out.println("upload file.");
-//                logger.info("upload file.");
-//                ftpUpload(zipFileList);
-////                moveZipList2TargetDir(zipFileList);
-//            }
-
-//        }
 
     }
 
@@ -77,7 +55,7 @@ public class AisinochipZipAndFtp {
             File zipFile = FileUtil.file(fileName);
             String zipFileName = zipFile.getName();
             List<String> list = XJSplitUtil.split(zipFileName, '-');
-            List<String> subList = new ArrayList<String>(list.subList(0, 3));
+            List<String> subList = new ArrayList<>(list.subList(0, 3));
             String lastDir = String.join("-", subList);
             subList.set(subList.size() - 1, lastDir);
             String destFileName = "D:/datalog/waitingCheck" + "/" + String.join("/", subList);
@@ -110,118 +88,17 @@ public class AisinochipZipAndFtp {
             if (upload) {
                 DatalogUploadRecordIml.updateByZipFile(zipFile);
             }
-
-
         }
 
-    }
-
-    public static List<String> zipDataLogFile(String period) {
-        //获取配置文件：客户代码、工艺代码和datalog文件目录
-        File file = new File(System.getProperty("user.dir") + "/res/custno.properties");
-        ConfigUtil configUtil = new ConfigUtil();
-        Configuration config = null;
-        try {
-            config = configUtil.getConfig(file);
-        } catch (ConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-        List<String> custCodeList = config.getList(String.class, "custCode");
-        List<String> workFlowList = config.getList(String.class, "CPWorkFlow");
-
-        //文件名校验
-        String zipDir = config.getString("datalogfilePath");
-
-        List<String> extentionNameList = config.getList(String.class, "extentionName");
-        //不递归处理，只在zipDir匹配文件
-        Collection<File> files = FileUtils.listFiles(new File(zipDir),
-                Arrays.stream(extentionNameList.toArray()).toArray(String[]::new),
-                true);
-        Iterator<File> it = files.iterator();
-        List<File> FTDataLogFileList = new ArrayList<>();
-        while (it.hasNext()) {
-            File dataLogFile = it.next();
-            if (dataLogFile.isFile()) {
-                if (period.equalsIgnoreCase("PREDAY")) {
-                    ZonedDateTime yesterday = ZonedDateTime.now(ZoneId.of("Asia/Shanghai"))
-                            .minusDays(1)
-                            .truncatedTo(ChronoUnit.DAYS);
-                    Date preDay = Date.from(yesterday.toInstant());
-                    ZonedDateTime today = yesterday.plusDays(1);
-                    Date currentDay = Date.from(today.toInstant());
-                    if (FileUtils.isFileNewer(dataLogFile, preDay) && FileUtils.isFileOlder(dataLogFile, currentDay)) {
-                        add2FTDataLogFileList(FTDataLogFileList, dataLogFile, custCodeList, workFlowList);
-                    }
-                } else if (period.equalsIgnoreCase("ALL")) {
-                    add2FTDataLogFileList(FTDataLogFileList, dataLogFile, custCodeList, workFlowList);
-                }
-            }
-        }
-        if (FTDataLogFileList.size() == 0) {
-            return new ArrayList<>();
-        }
-        Collections.sort(FTDataLogFileList);
-        String filePre = FTDataLogFileList.get(0).getName();
-        String nameWithoutExtensionPre = Files.getNameWithoutExtension(filePre);
-        String nameWithoutExtensionCurrent;
-
-        List<File> waitingZipFileList = new ArrayList<>();
-        List<String> zipList = new ArrayList<>();
-        Iterator<File> iterator = FTDataLogFileList.iterator();
-        List<String> fileNameList = new ArrayList<>();
-        while (iterator.hasNext()) {
-            File datalogFile = iterator.next();
-            String fileName = datalogFile.getName();
-
-            nameWithoutExtensionCurrent = Files.getNameWithoutExtension(fileName);
-//            nameWithoutExtensionCurrent.
-            String[] split = nameWithoutExtensionCurrent.split("-", 5);
-            String[] split2 = nameWithoutExtensionPre.split("-", 5);
-
-//            Arrays.stream(split).limit(3).toString();
-            if (split[0].equals(split2[0]) && split[1].equals(split2[1]) && split[2].equals(split2[2]) && split[3].equals(split2[3]) && iterator.hasNext()) {
-
-                waitingZipFileList.add(datalogFile);
-                if (fileNameList.size() > 0 && fileNameList.contains(fileName)) {
-                    waitingZipFileList.remove(datalogFile);
-                } else {
-                    fileNameList.add(fileName);
-                }
-            } else {
-                if (!iterator.hasNext()) {
-                    String lastFileName = fileName;
-                    waitingZipFileList.add(datalogFile);
-                    if (fileNameList.size() > 0 && fileNameList.contains(fileName)) {
-                        waitingZipFileList.remove(datalogFile);
-                    } else {
-                        fileNameList.add(fileName);
-                    }
-                }
-                String zipFile = zipDir + "\\" + nameWithoutExtensionPre + "." + "zip";
-//                File[] listArray = (File[]) waitingZipFileList.toArray();
-                File[] fileArray = waitingZipFileList.stream().toArray(File[]::new);
-
-                ZipUtil.zip(FileUtil.file(zipFile), false, fileArray);
-                DatalogUploadRecordIml.insertIntoTable(nameWithoutExtensionPre + "." + "zip", waitingZipFileList); //初始化表
-//                XJZipUtil.zipMultiFiles(waitingZipFileList, zipFile);
-                zipList.add(zipFile);
-                waitingZipFileList.clear();
-                fileNameList.clear();
-                waitingZipFileList.add(datalogFile);
-            }
-
-            nameWithoutExtensionPre = nameWithoutExtensionCurrent;
-        }
-        return zipList;
     }
 
     private static void add2FTDataLogFileList(List<File> ftDataLogFileList, File dataLogFile, List<String> custCodeList, List<String> workFlowList) {
         String fileNmae = dataLogFile.getName();
-        logger.info("fileName:" + fileNmae);
+        log.info("fileName:" + fileNmae);
         String nameWithoutExtension = Files.getNameWithoutExtension(fileNmae);
-        logger.info("nameWithoutExtension:" + Files.getNameWithoutExtension(fileNmae));
+        log.info("nameWithoutExtension:" + Files.getNameWithoutExtension(fileNmae));
         List<String> dataLogFileList = XJSplitUtil.split(nameWithoutExtension, '-');
-        logger.info("name:" + dataLogFileList.toString());
+        log.info("name:" + dataLogFileList);
         if (dataLogFileList.size() < 5) {
             return;
         }
