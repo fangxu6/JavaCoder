@@ -25,6 +25,8 @@ public class FTPInfo {
 
     public String destPath;
 
+    public String custNo;
+
     public FTPInfo(String host, int port, String user, String password, String destPath) {
         this.host = host;
         this.port = port;
@@ -32,7 +34,8 @@ public class FTPInfo {
         this.password = password;
         this.destPath = destPath;
     }
-    public FTPInfo(){
+
+    public FTPInfo() {
 
     }
 
@@ -51,5 +54,6 @@ public class FTPInfo {
         this.user = config.getString("user");
         this.password = config.getString("password");
         this.destPath = config.getString("destPath");
+        this.custNo = config.getString("custNo");
     }
 }

@@ -140,7 +140,7 @@
                     <archive>
                         <manifest>
                             <!-- 这里是你的项目main函数所在的类的全限定名 -->
-                            <mainClass>AisinochipZipAndFtp</mainClass>
+                            <mainClass>scheduler.quartz.AisinochipCronTriggerDemo</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

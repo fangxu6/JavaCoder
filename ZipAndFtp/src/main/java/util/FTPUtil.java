@@ -70,30 +70,29 @@ public class FTPUtil {
             String user = ftpInfo.user;
             String password = ftpInfo.password;
             ftp = new Ftp(host, port, user, password);
-//            ftp = new Ftp("127.0.0.1", 21, "admin", "12345680");
-            //服务器需要代理访问，才能对外访问
-//            ftp = new Ftp(host, port, user, password, CharsetUtil.CHARSET_UTF_8, FtpMode.Passive);
-//            ftp = new Ftp("127.0.0.1", 21, "admin", "12345680", CharsetUtil.CHARSET_UTF_8, FtpMode.Passive);
 
             File zipFile = FileUtil.file(fileName);
-            //TODO 不同客户不同要求 下面的subList还很有可能报错
-            String zipFileName = zipFile.getName().toUpperCase();
-            List<String> list = XJSplitUtil.split(zipFileName, '-');
-            List<String> subList = new ArrayList<String>(list.subList(0, 4));
-            String lastDir = String.join("-", subList);
-//            subList.set(subList.size() - 1, lastDir);
-            String destPath = ftpInfo.destPath;
-            if (!ftp.existFile(destPath)) {
-                ftp.mkdir(destPath);
-                ftp.cd(destPath);
-            } else {
-                ftp.cd(destPath);
+
+            if (ftpInfo.custNo.equals("aisino")) {
+                String zipFileName = zipFile.getName().toUpperCase();
+                List<String> list = XJSplitUtil.split(zipFileName, '-');
+                List<String> subList = new ArrayList<String>(list.subList(0, 4));
+                String destPath = ftpInfo.destPath;
+                if (!ftp.existFile(destPath)) {
+                    ftp.mkdir(destPath);
+                    ftp.cd(destPath);
+                } else {
+                    ftp.cd(destPath);
+                }
+                mkdir(ftp, subList);
             }
-            // TODO 不同客户不同要求 下面的mkdir不应该放在这
-            mkdir(ftp, subList);
-//            String destPath = ftpInfo.destPath;
+
             boolean upload = ftp.upload("", FileUtil.file(zipFile));
             logger.info("upload status:" + upload + "; uploadfile:" + fileName);
+
+            boolean del = FileUtil.del(zipFile);
+            logger.info("delete local file status:" + del);
+
             return upload;
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,16 +106,6 @@ public class FTPUtil {
             }
         }
         return false;
-    }
-
-    /**
-     * Ftp创建目录
-     *
-     * @param dir
-     */
-    public static boolean mkdir(Ftp ftp, String dir) {
-        ftp.mkdir(dir);
-        return true;
     }
 
     /**
@@ -150,7 +139,6 @@ public class FTPUtil {
         Socket socket = new Socket();
         InetAddress localAddress;
         try {
-            //TODO
             socket.connect(new InetSocketAddress("192.168.5.244", 22));
             localAddress = socket.getLocalAddress();
             socket.close();

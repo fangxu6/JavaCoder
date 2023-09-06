@@ -5,7 +5,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import scheduler.quartz.job.AsinochipCronTrigger;
-import scheduler.quartz.job.HelloJobCronTrigger;
 import util.ConfigUtil;
 import util.FTPUtil;
 
@@ -41,9 +40,9 @@ public class AisinochipCronTriggerDemo {
         String hostAddress = FTPUtil.getHostAddress();
         Integer num = Integer.valueOf(hostAddress.split("\\.")[3]);
         int min = num % 60;
-        int hour = num / 60;
+        int hour = num / 60 + Integer.parseInt(config.getString("beginHour"));
         String cronPeriod = "0" + " " + min + " " + hour + " " + "* * ?";
-//        String cronPeriod = "0 14 11 * * ?";
+//        String cronPeriod = "0 * * * * ?";
         // 3、触发器 - 控制执行次数和执行时间
         Trigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity("trigger1", "group1") // 同上
