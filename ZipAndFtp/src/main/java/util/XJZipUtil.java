@@ -9,10 +9,15 @@ import mybatis.service.DatalogUploadRecordIml;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -70,7 +75,7 @@ public class XJZipUtil {
                 Arrays.stream(extentionNameList.toArray()).toArray(String[]::new),
                 true);
         Iterator<File> it = files.iterator();
-        List<File> FTDataLogFileList = new ArrayList<>();
+        List<File> datalogFileList = new ArrayList<>();
         while (it.hasNext()) {
             File dataLogFile = it.next();
             if (dataLogFile.isFile()) {
@@ -82,27 +87,85 @@ public class XJZipUtil {
                 ZonedDateTime today = beginDate.plusDays(Integer.parseInt(period));
                 Date currentDay = Date.from(today.toInstant());
                 if (FileUtils.isFileNewer(dataLogFile, preDay) && FileUtils.isFileOlder(dataLogFile, currentDay)) {
-                    add2FTDataLogFileListWithoutRules(FTDataLogFileList, dataLogFile);
+//                    add2FTDataLogFileListWithoutRules(datalogFileList, dataLogFile);
+                    add2FTDataLogFileList(datalogFileList,dataLogFile,custCodeList,workFlowList);
                 }
             }
         }
-        if (FTDataLogFileList.isEmpty()) {
+        if (datalogFileList.isEmpty()) {
             return new ArrayList<>();
         }
-        return getZipList(FTDataLogFileList, custNoProperties);
+        return getZipList(datalogFileList, custNoProperties);
     }
 
-    private static List<String> getZipList(List<File> FTDataLogFileList, CustNoProperties custNoProperties) {
+    public static List<String> zipDataLogFileAndMoveFiles() throws ConfigurationException, IOException {
+        //0. 重命名目录 根据目录上的CP来匹配
+
+        File file = new File(System.getProperty("user.dir") + "/res/fitipower.properties");
+        ConfigUtil configUtil = new ConfigUtil();
+        Configuration config = configUtil.getConfig(file);
+        List<String> extentionNameList = config.getList(String.class, "extentionName");
+        String originalFilePath = config.getString("originalFilePath");
+        String backupFilePath = config.getString("backupFilePath");
+
+
+        File[] directories = new File(originalFilePath).listFiles(File::isDirectory);
+
+
+        if (directories == null || directories.length == 0) {
+            return new ArrayList<>();
+        }
+        renameDirectories(directories);
+
+
+        //1. 获取待上传目录下的文件
+
+
+        //2. 按照规则压缩并移动文件至waiting目录，zip文件还在本地
+
+        //3. 上传zip目录和对应xml文件，成功的把zip和xml文件放置success目录，失败的放到fail目录
+
+        return null;
+    }
+
+    private static void renameDirectories(File[] directories) throws IOException {
+        for (File dir : directories) {
+//加工方式	Lot No. in	Lot No. Out	Part No. out.	Date Code	刻號資訊
+//CP1S	    5Q886000	CSJ239103	BZ2904AD-C1S	2335	#1-25
+            String fileName = dir.getName();
+            dir.getPath();
+            String lotNo = fileName.substring(0, fileName.indexOf("CP"));
+            DataSource dataSource = JdbcUtils.getDataSource();
+            try {
+                Connection dataSourceConnection = dataSource.getConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            if ("5Q886000".equals(lotNo)) {
+                String newDirectoryName = "BZ2904AD-C1S" + "_" +
+                        "5Q886000" + "_" +
+                        "CSJ239103" + "_" +
+                        "CP1S" +
+                        "#1-25".replace("#", "_");
+                FileUtils.moveDirectory(dir,
+                        new File(dir.getParent() + File.separator + newDirectoryName));
+            }
+        }
+
+    }
+
+    private static List<String> getZipList(List<File> datalogFileList, CustNoProperties custNoProperties) {
         String zipDir = custNoProperties.getDatalogfilePath();
-        Collections.sort(FTDataLogFileList);
-        String filePre = FTDataLogFileList.get(0).getName();
+        Collections.sort(datalogFileList);
+        String filePre = datalogFileList.get(0).getName();
         String nameWithoutExtensionPre = Files.getNameWithoutExtension(filePre);
         String nameWithoutExtensionCurrent;
 
         List<File> waitingZipFileList = new ArrayList<>();
         List<String> zipList = new ArrayList<>();
 
-        Iterator<File> iterator = FTDataLogFileList.iterator();
+        Iterator<File> iterator = datalogFileList.iterator();
         List<String> fileNameList = new ArrayList<>();
         while (iterator.hasNext()) {
             File datalogFile = iterator.next();
@@ -112,7 +175,7 @@ public class XJZipUtil {
             // TODO 是否需要根据后缀名过滤
 
 
-            if (custNoProperties.getZipType().equals("aisino")) {
+            if ("aisino".equals(custNoProperties.getZipType())) {
                 String[] split = nameWithoutExtensionCurrent.split("-", 5);
                 String[] split2 = nameWithoutExtensionPre.split("-", 5);
                 if (split[0].equals(split2[0]) && split[1].equals(split2[1]) &&
@@ -158,12 +221,10 @@ public class XJZipUtil {
 
     private static String uploadZipFile(String zipDir, String nameWithoutExtensionPre, List<File> waitingZipFileList) {
         String zipFile = zipDir + "\\" + nameWithoutExtensionPre + "." + "zip";
-//                File[] listArray = (File[]) waitingZipFileList.toArray();
         File[] fileArray = waitingZipFileList.stream().toArray(File[]::new);
 
         ZipUtil.zip(FileUtil.file(zipFile), false, fileArray);
-        DatalogUploadRecordIml.insertIntoTable(nameWithoutExtensionPre + "." + "zip", waitingZipFileList); //初始化表
-//                XJZipUtil.zipMultiFiles(waitingZipFileList, zipFile);
+//        DatalogUploadRecordIml.insertIntoTable(nameWithoutExtensionPre + "." + "zip", waitingZipFileList);
         return zipFile;
     }
 

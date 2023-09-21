@@ -31,30 +31,6 @@ public class FTPUtil {
 
     private static Logger logger = LoggerFactory.getLogger(FTPUtil.class);
 
-    public static void main(String[] args) {
-//        文件压缩 ok
-        String zipFile = "D:\\data\\datalog\\RABBIT-EMT683-CP3-16-230812-230234.zip";
-//        List<String> fileList = new ArrayList<>();
-//        fileList.add("D:\\datalog\\iML-D23236-01-FT1-FT01.xls");
-//        fileList.add("D:\\datalog\\iML-D23236-01-FT1-FT01.cvs");
-//        fileList.add("D:\\datalog\\iML-D23236-01-FT1-FT01.STD");
-//        XJZipUtil.zipMultiFiles(fileList,outPath);
-        FTPInfo ftpInfo = new FTPInfo();
-        File ftpFile = new File(System.getProperty("user.dir") + "/res/ftp2.properties");
-        ftpInfo.getFTPINFOConfig(ftpFile);
-        boolean upload = upload(ftpInfo, zipFile);
-        logger.info(String.valueOf(upload));
-
-//        zipFile = "D:\\datalog\\iML-D23236-01-FT1-FT02.zip";
-//        upload = upload(ftpInfo, zipFile);
-//        System.out.println(upload);
-//        zipFile = "D:\\datalog\\iML-D23236-02-FT1-FT01.zip";
-//        upload = upload(ftpInfo, zipFile);
-//        System.out.println(upload);
-
-
-    }
-
     /**
      * 上传到Ftp
      *
@@ -129,9 +105,9 @@ public class FTPUtil {
         ftpInfo.getFTPINFOConfig(ftpConfigFile);
         for (String zipFile : zipFileList) {
             boolean upload = FTPUtil.upload(ftpInfo, zipFile);
-            if (upload) {
-                DatalogUploadRecordIml.updateByZipFile(zipFile);
-            }
+//            if (upload) {
+//                DatalogUploadRecordIml.updateByZipFile(zipFile);
+//            }
         }
     }
 

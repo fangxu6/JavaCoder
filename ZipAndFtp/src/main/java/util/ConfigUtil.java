@@ -20,13 +20,6 @@ import java.util.List;
  * @since 2023/6/26 9:40
  */
 public class ConfigUtil {
-    public static void main(String[] args) throws ConfigurationException {
-        File file = new File(System.getProperty("user.dir") + "/res/custno.properties");
-        ConfigUtil apacheConfigTest = new ConfigUtil();
-        Configuration config = apacheConfigTest.getConfig(file);
-        List<String> custCodeList = config.getList(String.class, "custCode");
-        List<String> workFlowList = config.getList(String.class, "workFlow");
-    }
 
     public Configuration getConfig(File file) throws ConfigurationException {
 //        Configurations configs = new Configurations();

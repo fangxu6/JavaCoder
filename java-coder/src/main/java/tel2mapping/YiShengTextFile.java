@@ -1,12 +1,7 @@
 package tel2mapping;
 
-import tel2mapping.dat.LotDat;
-import tel2mapping.dat.WaferDat;
 import tel2mapping.dat.WaferMapData;
 import tel2mapping.dat.YiShengData;
-import tel2mapping.dat.subentity.BinData;
-import tel2mapping.dat.subentity.DieData;
-import tel2mapping.dat.subentity.LineData;
 
 import java.io.*;
 import java.util.Comparator;
@@ -25,29 +20,26 @@ import java.util.TreeMap;
 public class YiShengTextFile {
     public static void main(String[] args) throws IOException {
 
-        String file = "C:\\Users\\fang\\Desktop\\易冲要求\\TSK\\NB9S14.09\\002.NB9S14.09-2";
-//        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
+        String fileNmae = "D:\\jse\\文件归档\\易冲要求\\TSK\\002.H4KA50-02B7";
 
-//        LotDat lotDat = new LotDat();
-//        lotDat = lotDat.read(file);
         YiShengData yiShengData = new YiShengData();
-        yiShengData = yiShengData.read(file);
+        yiShengData = yiShengData.read(fileNmae);
 
 
-//        String file2 = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
-////        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
-//        WaferDat waferDat = new WaferDat();
-//        waferDat = waferDat.read(file2);
 
+        File file = new File(fileNmae);
+        String[] split = yiShengData.getWaferId().split("-");
+        String waferID = split[1].substring(0,2);
+        int id = Integer.parseInt(waferID);
+        String idString = String.format("%02d", id);
 
-        File os = new File("out.txt");
+        File os = new File(file.getParent() + File.separator + yiShengData.getLotNo() + "-2-" + idString + ".txt");
         Writer fw = new FileWriter(os);
         BufferedWriter writer = new BufferedWriter(fw);
 
         String binQuanYield;
-        String[] split = yiShengData.getWaferId().split("-");
-        String waferID = split[1];//last
-        binQuanYield = String.format("%-12s%-2s", yiShengData.getLotNo(), waferID);
+
+        binQuanYield = String.format("%-12s%2s", yiShengData.getLotNo(), idString);
         writer.write(binQuanYield);
         //ProductName MPW-Code ProductCode TestID OperID TestProgram StartTime
         String startTime = yiShengData.getStartTime();
@@ -62,13 +54,26 @@ public class YiShengTextFile {
         writer.newLine();
 
         List<WaferMapData> waferMapDataList = yiShengData.getWaferMapDataList();
+        //获取x和y轴的最小值，用于格式化x和y轴
+        int xMin = Integer.MAX_VALUE;
+        int yMin = Integer.MAX_VALUE;
         for (int i = 0; i < waferMapDataList.size(); i++) {
             WaferMapData waferMapData = waferMapDataList.get(i);
-            int addressXOfRecord = waferMapData.getAddressXOfRecord();
-            binQuanYield = String.format("%4d%4d%4d%4d", waferMapData.getAddressXOfRecord(), waferMapData.getAddressYOfRecord(), waferMapData.getBin(), waferMapData.getVisualInspection());
+            if (xMin > waferMapData.getAddressXOfRecord()) {
+                xMin = waferMapData.getAddressXOfRecord();
+            }
+            if (yMin > waferMapData.getAddressYOfRecord()) {
+                yMin = waferMapData.getAddressYOfRecord();
+            }
+        }
+        for (int i = 0; i < waferMapDataList.size(); i++) {
+            WaferMapData waferMapData = waferMapDataList.get(i);
+            binQuanYield = String.format("%4d%4d%4d%4d", waferMapData.getAddressXOfRecord() - xMin, waferMapData.getAddressYOfRecord() - yMin,
+                    waferMapData.getBin(), waferMapData.getVisualInspection());
             writer.write(binQuanYield);
-            if (i < waferMapDataList.size())
+            if (i < waferMapDataList.size()) {
                 writer.newLine();
+            }
         }
 
         writer.flush();
@@ -90,6 +95,7 @@ public class YiShengTextFile {
         }
 //        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
         Map<Integer, Integer> sortMap = new TreeMap<Integer, Integer>(new Comparator<Integer>() {
+            @Override
             public int compare(Integer obj1, Integer obj2) {
                 return obj1.compareTo(obj2);//升序排序
             }

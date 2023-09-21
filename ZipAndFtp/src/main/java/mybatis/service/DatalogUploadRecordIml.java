@@ -41,10 +41,8 @@ public class DatalogUploadRecordIml {
         }
 
         DatalogUploadRecord datalogUploadRecord = new DatalogUploadRecord();
-//        String hostAddress = InetAddress.getLocalHost().getHostAddress();
         datalogUploadRecord.setIp(FTPUtil.getHostAddress());
         datalogUploadRecord.setZipFile(zipFileName);
-//        datalogUploadRecord.setZipFile("33test.zip");
         datalogUploadRecord.setStatus(0);
         if (fileList.size() > 7) {
             logger.warn("file size larger than 7, please check the rule or change the rule!");

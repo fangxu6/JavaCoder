@@ -9,10 +9,18 @@
         <outputRelativeToContentRoot value="true" />
         <module name="spring-fiftyerrors" />
         <module name="java-coder" />
-        <module name="jse" />
         <module name="ZipAndFtp" />
         <module name="jse-agent" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="jse" target="1.8" />
+      <module name="jse-commons" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jse-commons" options="-Xlint:all" />
+    </option>
   </component>
 </project>

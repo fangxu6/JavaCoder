@@ -1,47 +1,53 @@
 import bean.AisinochipDataLogFileFormat;
 import bean.FTPInfo;
 import cn.hutool.core.io.FileUtil;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.io.Files;
 import lombok.extern.slf4j.Slf4j;
 import mybatis.service.DatalogUploadRecordIml;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.FileUtils;
+import util.DruidCreat;
 import util.FTPUtil;
 import util.XJSplitUtil;
 import util.XJZipUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * className: ChipTestZipAndFtp
+ * className: ZipAndFtp
  * package: com.xijie.FT
  * Description:
- *
+ *  天钰打包和上传文件
  * @author fangxu6@gmail.com
  * @since 2023/6/21 15:13
  */
 @Slf4j
-public class ChipTestZipAndFtp {
-
+public class FitiPowerZipAndFtp {
+    DruidDataSource dataSource;
     public static void main(String[] args) {
+        FitiPowerZipAndFtp fitiPowerZipAndFtp = new FitiPowerZipAndFtp();
 
-        log.info("starting...");
+        log.info("zip files started。");
 
         List<String> zipFileList;
         try {
-            zipFileList = XJZipUtil.zipDataLogFile();
+            zipFileList = XJZipUtil.zipDataLogFileAndMoveFiles();
         } catch (ConfigurationException e) {
             log.error(e.toString());
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         if (zipFileList.isEmpty()) {
             log.info("no zip file generated.");
         } else {
             log.info("upload file.");
-            FTPUtil.ftpUpload(zipFileList);
+//            FTPUtil.ftpUpload(zipFileList);
 //                moveZipList2TargetDir(zipFileList);
         }
 

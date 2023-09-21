@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.5.244:3306/jse?useUnicode=true&zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:  # Druid 【连接池】相关的全局配置
+      initial-size: 2 # 初始连接数
+      min-idle: 2 # 最小连接池数量
+      max-active: 5 # 最大连接池数量
+      validation-query: select 1  # 配置检测连接是否有效
+      test-while-idle: true
+      test-on-borrow: true
+      test-on-return: false
+      max-wait: 6000
+      filter: slf4j

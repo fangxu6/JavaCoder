@@ -1,17 +1,13 @@
 package scheduler.quartz.job;
 
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import util.ConfigUtil;
 import util.FTPUtil;
 import util.XJZipUtil;
 
-import java.io.File;
 import java.util.List;
 
 /**
@@ -23,20 +19,20 @@ import java.util.List;
  * @since 2023/8/24 10:30
  */
 public class AsinochipCronTrigger implements Job {
-    private static Logger logger = LoggerFactory.getLogger(AsinochipCronTrigger.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsinochipCronTrigger.class);
 
 
     @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
+    public void execute(JobExecutionContext context) {
         logger.info("starting...");
 
-        List<String> zipFileList = null;
+        List<String> zipFileList ;
         try {
             zipFileList = XJZipUtil.zipDataLogFile();
         } catch (ConfigurationException e) {
             throw new RuntimeException(e);
         }
-        if (zipFileList.size() == 0) {
+        if (zipFileList.isEmpty()) {
             logger.info("no zip file generated.");
         } else {
             logger.info("upload file.");
