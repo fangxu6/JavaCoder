@@ -25,6 +25,7 @@ public class SPG8929BResult {
     Double AVEE_PRE;
     Double VOS_BST_PRE;
 
+
     public Double getVREF1_PRE() {
         return VREF1_PRE;
     }
@@ -118,7 +119,20 @@ public class SPG8929BResult {
         this.VOS_BST_PRE = 0.0;
     }
 
-    public static List<SPG8929BResult> gapList(List<SPG8929BBean> spg8929BBeanList) {
+    public SPG8929BResult(Double definedNumber) {
+        this.VREF1_PRE = definedNumber;
+        this.IB_PRE = definedNumber;
+        this.ILIMIT_AVDD_PRE = definedNumber;
+        this.ILIMIT_BST_PRE = definedNumber;
+        this.FREQ_PRE = definedNumber;
+        this.VBST_PRE = definedNumber;
+        this.AVDD_PRE = definedNumber;
+        this.AVEE_FREQ_PRE = definedNumber;
+        this.AVEE_PRE = definedNumber;
+        this.VOS_BST_PRE = definedNumber;
+    }
+
+    public static List<SPG8929BResult> getSPG8929BResultList(List<SPG8929BBean> spg8929BBeanList) {
         List<SPG8929BResult> spg8929BResultList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             SPG8929BResult spg8929BResult = new SPG8929BResult();
@@ -154,5 +168,84 @@ public class SPG8929BResult {
         return spg8929BResultList;
     }
 
+    public static SPG8929BResult getGap(List<SPG8929BResult> spg8929BResults) {
+        SPG8929BResult spg8929BResult = new SPG8929BResult();
+        SPG8929BResult minSPG8929BResult = new SPG8929BResult(Double.POSITIVE_INFINITY);
+        SPG8929BResult maxSPG8929BResult = new SPG8929BResult(Double.NEGATIVE_INFINITY);
+        for (SPG8929BResult spg : spg8929BResults) {
+            if (spg.VREF1_PRE < minSPG8929BResult.VREF1_PRE) {
+                minSPG8929BResult.VREF1_PRE = spg.VREF1_PRE;
+            }
+            if (spg.VREF1_PRE > maxSPG8929BResult.VREF1_PRE) {
+                maxSPG8929BResult.VREF1_PRE = spg.VREF1_PRE;
+            }
+            if (spg.IB_PRE < minSPG8929BResult.IB_PRE) {
+                minSPG8929BResult.IB_PRE = spg.IB_PRE;
+            }
+            if (spg.IB_PRE > maxSPG8929BResult.IB_PRE) {
+                maxSPG8929BResult.IB_PRE = spg.IB_PRE;
+            }
+            if (spg.ILIMIT_AVDD_PRE < minSPG8929BResult.ILIMIT_AVDD_PRE) {
+                minSPG8929BResult.ILIMIT_AVDD_PRE = spg.ILIMIT_AVDD_PRE;
+            }
+            if (spg.ILIMIT_AVDD_PRE > maxSPG8929BResult.ILIMIT_AVDD_PRE) {
+                maxSPG8929BResult.ILIMIT_AVDD_PRE = spg.ILIMIT_AVDD_PRE;
+            }
+            if (spg.ILIMIT_BST_PRE < minSPG8929BResult.ILIMIT_BST_PRE) {
+                minSPG8929BResult.ILIMIT_BST_PRE = spg.ILIMIT_BST_PRE;
+            }
+            if (spg.ILIMIT_BST_PRE > maxSPG8929BResult.ILIMIT_BST_PRE) {
+                maxSPG8929BResult.ILIMIT_BST_PRE = spg.ILIMIT_BST_PRE;
+            }
+            if (spg.FREQ_PRE < minSPG8929BResult.FREQ_PRE) {
+                minSPG8929BResult.FREQ_PRE = spg.FREQ_PRE;
+            }
+            if (spg.FREQ_PRE > maxSPG8929BResult.FREQ_PRE) {
+                maxSPG8929BResult.FREQ_PRE = spg.FREQ_PRE;
+            }
+            if (spg.VBST_PRE < minSPG8929BResult.VBST_PRE) {
+                minSPG8929BResult.VBST_PRE = spg.VBST_PRE;
+            }
+            if (spg.VBST_PRE > maxSPG8929BResult.VBST_PRE) {
+                maxSPG8929BResult.VBST_PRE = spg.VBST_PRE;
+            }
+            if (spg.AVDD_PRE < minSPG8929BResult.AVDD_PRE) {
+                minSPG8929BResult.AVDD_PRE = spg.AVDD_PRE;
+            }
+            if (spg.AVDD_PRE > maxSPG8929BResult.AVDD_PRE) {
+                maxSPG8929BResult.AVDD_PRE = spg.AVDD_PRE;
+            }
+            if (spg.AVEE_FREQ_PRE < minSPG8929BResult.AVEE_FREQ_PRE) {
+                minSPG8929BResult.AVEE_FREQ_PRE = spg.AVEE_FREQ_PRE;
+            }
+            if (spg.AVEE_FREQ_PRE > maxSPG8929BResult.AVEE_FREQ_PRE) {
+                maxSPG8929BResult.AVEE_FREQ_PRE = spg.AVEE_FREQ_PRE;
+            }
+            if (spg.AVEE_PRE < minSPG8929BResult.AVEE_PRE) {
+                minSPG8929BResult.AVEE_PRE = spg.AVEE_PRE;
+            }
+            if (spg.AVEE_PRE > maxSPG8929BResult.AVEE_PRE) {
+                maxSPG8929BResult.AVEE_PRE = spg.AVEE_PRE;
+            }
+            if (spg.VOS_BST_PRE < minSPG8929BResult.VOS_BST_PRE) {
+                minSPG8929BResult.VOS_BST_PRE = spg.VOS_BST_PRE;
+            }
+            if (spg.VOS_BST_PRE > maxSPG8929BResult.VOS_BST_PRE) {
+                maxSPG8929BResult.VOS_BST_PRE = spg.VOS_BST_PRE;
+            }
+        }
+        spg8929BResult.VREF1_PRE = maxSPG8929BResult.VREF1_PRE - minSPG8929BResult.VREF1_PRE;
+        spg8929BResult.IB_PRE = maxSPG8929BResult.IB_PRE - minSPG8929BResult.IB_PRE;
+        spg8929BResult.ILIMIT_AVDD_PRE = maxSPG8929BResult.ILIMIT_AVDD_PRE - minSPG8929BResult.ILIMIT_AVDD_PRE;
+        spg8929BResult.ILIMIT_BST_PRE = maxSPG8929BResult.ILIMIT_BST_PRE - minSPG8929BResult.ILIMIT_BST_PRE;
+        spg8929BResult.FREQ_PRE = maxSPG8929BResult.FREQ_PRE - minSPG8929BResult.FREQ_PRE;
+        spg8929BResult.VBST_PRE = maxSPG8929BResult.VBST_PRE - minSPG8929BResult.VBST_PRE;
+        spg8929BResult.AVDD_PRE = maxSPG8929BResult.AVDD_PRE - minSPG8929BResult.AVDD_PRE;
+        spg8929BResult.AVEE_FREQ_PRE = maxSPG8929BResult.AVEE_FREQ_PRE - minSPG8929BResult.AVEE_FREQ_PRE;
+        spg8929BResult.AVEE_PRE = maxSPG8929BResult.AVEE_PRE - minSPG8929BResult.AVEE_PRE;
+        spg8929BResult.VOS_BST_PRE = maxSPG8929BResult.VOS_BST_PRE - minSPG8929BResult.VOS_BST_PRE;
+
+        return spg8929BResult;
+    }
 
 }

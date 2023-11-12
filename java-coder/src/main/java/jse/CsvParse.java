@@ -1,15 +1,13 @@
 package jse;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 
 /**
@@ -92,9 +90,68 @@ public class CsvParse {
             e.printStackTrace();
         }
 
-        List<SPG8929BResult> spg8929BResults = SPG8929BResult.gapList(beanList);
-    }
+        List<SPG8929BResult> spg8929BResults = SPG8929BResult.getSPG8929BResultList(beanList);
 
+        SPG8929BResult gap = SPG8929BResult.getGap(spg8929BResults);
+//        spg8929BResults.add(gap);
+
+        final String[] FILE_HEADER = {"column", "1", "2", "3", "4", "5", "6", "7", "8"};
+        final String[] COLUMN_HEADER = {"column",
+                "VREF1_PRE",
+                "IB_PRE",
+                "ILIMIT_AVDD_PRE",
+                "ILIMIT_BST_PRE",
+                "FREQ_PRE",
+                "VBST_PRE",
+                "AVDD_PRE",
+                "AVEE_FREQ_PRE",
+                "AVEE_PRE",
+                "VOS_BST_PRE"};
+        final String FILE_NAME = "result.csv";
+
+
+        // 这里显式地配置一下CSV文件的Header，然后设置跳过Header（要不然读的时候会把头也当成一条记录）
+        CSVFormat format = CSVFormat.DEFAULT.withHeader(COLUMN_HEADER).withSkipHeaderRecord(false);
+
+        // 这是写入CSV的代码
+        try (Writer out = new FileWriter(FILE_NAME);
+             CSVPrinter printer = new CSVPrinter(out, format)) {
+            int i=1;
+            for (SPG8929BResult spg8929BResult:spg8929BResults) {
+                List<String> records = new ArrayList<>();
+                records.add(String.valueOf(i));
+                records.add(String.valueOf(spg8929BResult.VREF1_PRE));
+                records.add(String.valueOf(spg8929BResult.IB_PRE));
+                records.add(String.valueOf(spg8929BResult.ILIMIT_AVDD_PRE));
+                records.add(String.valueOf(spg8929BResult.ILIMIT_BST_PRE));
+                records.add(String.valueOf(spg8929BResult.FREQ_PRE));
+                records.add(String.valueOf(spg8929BResult.VBST_PRE));
+                records.add(String.valueOf(spg8929BResult.AVDD_PRE));
+                records.add(String.valueOf(spg8929BResult.AVEE_FREQ_PRE));
+                records.add(String.valueOf(spg8929BResult.AVEE_PRE));
+                records.add(String.valueOf(spg8929BResult.VOS_BST_PRE));
+                printer.printRecord(records);
+                i++;
+            }
+
+            List<String> records = new ArrayList<>();
+            records.add("gap");
+            records.add(String.valueOf(gap.VREF1_PRE));
+            records.add(String.valueOf(gap.IB_PRE));
+            records.add(String.valueOf(gap.ILIMIT_AVDD_PRE));
+            records.add(String.valueOf(gap.ILIMIT_BST_PRE));
+            records.add(String.valueOf(gap.FREQ_PRE));
+            records.add(String.valueOf(gap.VBST_PRE));
+            records.add(String.valueOf(gap.AVDD_PRE));
+            records.add(String.valueOf(gap.AVEE_FREQ_PRE));
+            records.add(String.valueOf(gap.AVEE_PRE));
+            records.add(String.valueOf(gap.VOS_BST_PRE));
+            printer.printRecord(records);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
 }
