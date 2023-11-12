@@ -1,7 +1,7 @@
 package tel2mapping;
 
+import tel2mapping.dat.TSKData;
 import tel2mapping.dat.WaferMapData;
-import tel2mapping.dat.YiShengData;
 
 import java.io.*;
 import java.util.Comparator;
@@ -25,8 +25,8 @@ public class ChipOneICTextFile {
 
 //        LotDat lotDat = new LotDat();
 //        lotDat = lotDat.read(file);
-        YiShengData yiShengData = new YiShengData();
-        yiShengData = yiShengData.read(file);
+        TSKData yiChongData = new TSKData();
+        yiChongData = yiChongData.read(file);
 
 
 //        String file2 = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
@@ -40,23 +40,23 @@ public class ChipOneICTextFile {
         BufferedWriter writer = new BufferedWriter(fw);
 
         String binQuanYield;
-        String[] split = yiShengData.getWaferId().split("-");
+        String[] split = yiChongData.getWaferId().split("-");
         String waferID = split[1];//last
-        binQuanYield = String.format("%-12s%-2s", yiShengData.getLotNo(), waferID);
+        binQuanYield = String.format("%-12s%-2s", yiChongData.getLotNo(), waferID);
         writer.write(binQuanYield);
         //ProductName MPW-Code ProductCode TestID OperID TestProgram StartTime
-        String startTime = yiShengData.getStartTime();
+        String startTime = yiChongData.getStartTime();
         binQuanYield = String.format("%-32s%-4s%-6s%-8s%-8s%-30s%-19s", "", "", "", "N/A", "", "", startTime);
         writer.write(binQuanYield);
 
-        String endTime = yiShengData.getEndTime();
+        String endTime = yiChongData.getEndTime();
         //EndTime ProbleCardID LoadBoardID Bd_File Notch SortID Test_Site Fd_File
-        binQuanYield = String.format("%-19s%-12s%-12s%-20s%-1s%-1s%-8s%-20s", endTime, "", "", "Bd_File", yiShengData.getOrientationFlatAngleName(), "1", "JSE", "");
+        binQuanYield = String.format("%-19s%-12s%-12s%-20s%-1s%-1s%-8s%-20s", endTime, "", "", "Bd_File", yiChongData.getOrientationFlatAngleName(), "1", "JSE", "");
 
         writer.write(binQuanYield);
         writer.newLine();
 
-        List<WaferMapData> waferMapDataList = yiShengData.getWaferMapDataList();
+        List<WaferMapData> waferMapDataList = yiChongData.getWaferMapDataList();
         for (int i = 0; i < waferMapDataList.size(); i++) {
             WaferMapData waferMapData = waferMapDataList.get(i);
             int addressXOfRecord = waferMapData.getAddressXOfRecord();

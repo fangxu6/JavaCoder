@@ -29,8 +29,8 @@ public class TSKData {
 
     private byte finalEditingMachineType;//50 1
     private byte mapVersion;//51 1
-    private Integer mapDataAreaRowSize; //52 2
-    private Integer mapDataAreaLineSize;// 54 2
+    private Short mapDataAreaRowSize; //52 2
+    private Short mapDataAreaLineSize;// 54 2
     private String mapDataForm;// 56 4
 
     private Short totalTestedDice;
@@ -182,8 +182,8 @@ public class TSKData {
         finalEditingMachineType = dis.readByte();
         mapVersion = dis.readByte();
 
-        mapDataAreaRowSize = dis.readUnsignedShort();// 记录行数
-        mapDataAreaLineSize = dis.readUnsignedShort();// 记录列数
+        mapDataAreaRowSize = (short) dis.readUnsignedShort();// 记录行数
+        mapDataAreaLineSize = (short) dis.readUnsignedShort();// 记录列数
 
         dis.skipBytes(4);
         dis.read(bytes, 0, 21);
