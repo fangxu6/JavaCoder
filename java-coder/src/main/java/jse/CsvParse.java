@@ -20,22 +20,6 @@ import org.apache.commons.csv.CSVRecord;
  */
 public class CsvParse {
     public static void main(String[] args) throws IOException {
-        // 创建CSVParser对象
-        CSVParser parser = CSVParser.parse(new File
-                ("C:\\Users\\fangx\\Desktop\\陈鑫卡控客户gap要求\\OCP2130WPAD-G(SPG8929B)_V5_230412_JSSI_T23A2024-A_3RIY03098-01A2_20231106_170523.csv"), Charset.defaultCharset(), CSVFormat.DEFAULT);
-
-// 遍历解析得到的记录
-//        for (CSVRecord record : parser) {
-//            // 处理每一行的数据
-//            String value1 = record.get(0); // 获取第一列的值
-////            String value2 = record.get(1); // 获取第二列的值
-//            // 进行统计和计算操作
-//            // ...
-//            if (value1.trim().equalsIgnoreCase("SITE_NUM")){
-//                System.out.println("value1:" + value1);
-//            }
-//        }
-
         String csvFile = "C:\\Users\\fangx\\Desktop\\陈鑫卡控客户gap要求\\OCP2130WPAD-G(SPG8929B)_V5_230412_JSSI_T23A2024-A_3RIY03098-01A2_20231106_170523.csv";
         int startRow = 1; // 指定从第5行开始解析
         List<SPG8929BBean> beanList = new ArrayList<>();

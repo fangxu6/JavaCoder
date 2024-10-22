@@ -1,11 +1,10 @@
 package com.gougou.testable;
 
-import javax.transaction.InvalidTransactionException;
 
 
 public class testExecute_with_TransactionIsExpired {
 
-    public void testExecute_with_TransactionIsExpired() throws InvalidTransactionException {
+    public void testExecute_with_TransactionIsExpired() throws Exception {
         Long buyerId = 123L;
         Long sellerId = 234L;
         Long productId = 345L;
@@ -28,7 +27,7 @@ public class testExecute_with_TransactionIsExpired {
         try {
             System.out.println("testExecute_with_TransactionIsExpired");
             test.testExecute_with_TransactionIsExpired();
-        } catch (InvalidTransactionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -3,7 +3,6 @@ package com.gougou.testable;
 
 //import com.gougou.singletonlock.IdGenerator;
 
-import javax.transaction.InvalidTransactionException;
 
 public class Transaction {
     private String id;
@@ -37,9 +36,9 @@ public class Transaction {
         this.createTimestamp = System.currentTimeMillis();
     }
 
-    public boolean execute() throws InvalidTransactionException {
+    public boolean execute() throws Exception {
         if (buyerId == null || sellerId == null ) {
-            throw new InvalidTransactionException("Invalid transaction");
+            throw new Exception("Invalid transaction");
         }
         if (status == STATUS.EXECUTED) return true;
         boolean isLocked = false;

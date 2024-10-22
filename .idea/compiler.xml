@@ -11,6 +11,7 @@
         <module name="java-coder" />
         <module name="ZipAndFtp" />
         <module name="jse-agent" />
+        <module name="tel2mapping" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

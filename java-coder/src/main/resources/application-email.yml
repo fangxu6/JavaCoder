@@ -1,0 +1,16 @@
+mail:
+  domain: jse-elec.com
+  from: ${spring.mail.username}@${mail.domain}
+spring:
+  mail:
+    default-encoding: UTF-8
+    host: smtp.mxhichina.com
+    password: Seagatek123456
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    username: jse-system

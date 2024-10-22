@@ -1,44 +1,28 @@
-package tel2mapping;
+package tel2mapping.dat;
 
-import tel2mapping.dat.LotDat;
-import tel2mapping.dat.WaferDat;
 import tel2mapping.dat.subentity.BinData;
 import tel2mapping.dat.subentity.DieData;
 import tel2mapping.dat.subentity.LineData;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Map;
 
-public class ReadP8File {
-    public static void main(String[] args) throws IOException {
-//        DataInputStream dis = new DataInputStream(new FileInputStream("D:\\workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT"));
-//        byte[] a = new byte[368];
-//        byte[] b = new byte[3];
-//        byte[] c = new byte[3];
-//        byte[] d = new byte[3];
-//        dis.skipBytes(368);
-//        dis.read(b, 0, b.length);//98 -51 1
-//        dis.read(c);//18 2 0
-//        dis.read(d);//116 -49 1
-
-        String file = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
-//        String file = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\LOT1.DAT";
-
-        LotDat lotDat = new LotDat();
-        lotDat = lotDat.read(file);
-
-
-        String file2 = "C:\\Users\\fang\\Desktop\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
-//        String file2 = "D:\\Workspace\\articles\\dev\\c#\\封测TSK需求\\黄文龙tel开发示例\\新建文件夹\\LOT00001-TEL\\WAFER011.DAT";
-        WaferDat waferDat = new WaferDat();
-        waferDat = waferDat.read(file2);
-
-
-        File os = new File("out.txt");
+/**
+ * className: TxtOut
+ * package: tel2mapping.dat
+ * Description:
+ *
+ * @author fangxu6@gmail.com
+ * @since 2024/10/18 15:40
+ */
+public class TxtOut {
+    public void printTxt(LotDat lotDat,WaferDat waferDat,File waferFile) throws IOException {
+        String parentDirectory = waferFile.getParent();
+        String waferFileOutPut = parentDirectory + "\\" + lotDat.getLotNo()+"-"+waferDat.getWaferID()+".txt";
+        File os = new File(waferFileOutPut);
         Writer fw = new FileWriter(os);
         BufferedWriter writer = new BufferedWriter(fw);
         writer.write("PRODUCT       = ");
@@ -51,10 +35,15 @@ public class ReadP8File {
         writer.write(waferDat.getWaferID());
         writer.newLine();
         writer.write("START TIME    = ");
-        writer.write(waferDat.getTestTotal().getLotStartTime().toString());
+        LocalDateTime lotStartTime = waferDat.getTestTotal().getLotStartTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedStartTime = lotStartTime.format(formatter);
+        writer.write(formattedStartTime);
         writer.newLine();
         writer.write("END TIME      = ");
-        writer.write(waferDat.getTestTotal().getLotEndTime().toString());
+        LocalDateTime lotEndTime = waferDat.getTestTotal().getLotEndTime();
+        String formattedEndTime = lotEndTime.format(formatter);
+        writer.write(formattedEndTime);
         writer.newLine();
         writer.write("X QUANTUM     = ");
         int XQuant = waferDat.getXMaximun() - waferDat.getXMinimin();
@@ -109,7 +98,6 @@ public class ReadP8File {
         writer.newLine();
 
         Map<Integer, Integer> map = waferDat.getMapData().getBinMap();
-        map = sortMapByKey(map);
         String binQuanYield;
 //        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
 //            Integer key = entry.getKey();
@@ -167,27 +155,5 @@ public class ReadP8File {
         writer.flush();
         writer.close();
 
-        fw.close();
-
-    }
-
-    /**
-     * 使用 Map按key进行排序
-     *
-     * @param map
-     * @return
-     */
-    public static Map<Integer, Integer> sortMapByKey(Map<Integer, Integer> map) {
-        if (map == null || map.isEmpty()) {
-            return null;
-        }
-//        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
-        Map<Integer, Integer> sortMap = new TreeMap<Integer, Integer>(new Comparator<Integer>() {
-            public int compare(Integer obj1, Integer obj2) {
-                return obj1.compareTo(obj2);//升序排序
-            }
-        });
-        sortMap.putAll(map);
-        return sortMap;
-    }
+        fw.close();    }
 }

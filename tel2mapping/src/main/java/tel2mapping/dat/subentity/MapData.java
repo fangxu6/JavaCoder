@@ -1,6 +1,5 @@
 package tel2mapping.dat.subentity;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

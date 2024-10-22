@@ -2,13 +2,11 @@ package tel2mapping.dat;
 
 import org.apache.commons.io.EndianUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.formula.functions.T;
 import tel2mapping.dat.subentity.*;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -159,6 +157,7 @@ public class WaferDat {
         mapData.setBinData(binList);
         setMapData(mapData);
 
+
         byte b = dis.readByte();
 
 
@@ -216,5 +215,25 @@ public class WaferDat {
         return localDateTime;
     }
 
+
+    /**
+     * 使用 Map按key进行排序
+     *
+     * @param map
+     * @return
+     */
+    public static Map<Integer, Integer> sortMapByKey(Map<Integer, Integer> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+//        Map<String, String> sortMap = new TreeMap<String, String>(new MapKeyComparator());
+        Map<Integer, Integer> sortMap = new TreeMap<Integer, Integer>(new Comparator<Integer>() {
+            public int compare(Integer obj1, Integer obj2) {
+                return obj1.compareTo(obj2);//升序排序
+            }
+        });
+        sortMap.putAll(map);
+        return sortMap;
+    }
 
 }
