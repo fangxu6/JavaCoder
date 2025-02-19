@@ -1,9 +1,11 @@
 # Project exclude paths
 /java-coder/src/main/java/com/gougou/processesonly/
-/target/
+**/target/**
 /filters/
 /ZipAndFtp/target/
 /out/
 /spring-fiftyerrors/target/
 /java-coder/target/
 /.idea/modules.xml
+
+.idea/
