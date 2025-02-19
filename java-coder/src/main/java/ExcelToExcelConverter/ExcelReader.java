@@ -19,10 +19,7 @@ import java.util.logging.Logger;
  * @since 2025/2/19 10:12
  */
 public class ExcelReader {
-    private static Logger logger = Logger.getLogger(ExcelReader.class.getName()); // 日志打印类
-
-    private static final String XLS = "xls";
-    private static final String XLSX = "xlsx";
+    private static final Logger logger = Logger.getLogger(ExcelReader.class.getName()); // 日志打印类
 
     /**
      * 读取Excel文件内容
@@ -53,7 +50,7 @@ public class ExcelReader {
                 // Read the other fields starting from row 5
                 String iPN = getCellValueAsString(getMergedCellValue(sheet, row, 1));
                 //ipn=Total: 跳出循环
-                if (iPN.toUpperCase().equals("TOTAL:")) {
+                if (iPN.equalsIgnoreCase("Total:")) {
                     break;
                 }
                 data.setIPN(iPN);        // 产品型号
