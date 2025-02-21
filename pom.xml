@@ -15,7 +15,6 @@
         <module>spring-fiftyerrors</module>
         <module>java-coder</module>
         <module>ZipAndFtp</module>
-        <module>jse</module>
         <module>jse-agent</module>
         <module>tel2mapping</module>
     </modules>
@@ -28,22 +27,6 @@
 
     <build>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.apache.maven.plugins</groupId>-->
-            <!--                <artifactId>maven-shade-plugin</artifactId>-->
-            <!--&lt;!&ndash;                <version>3.2.4</version>&ndash;&gt;-->
-            <!--                <configuration>-->
-            <!--                    &lt;!&ndash; put your configurations here &ndash;&gt;-->
-            <!--                </configuration>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <phase>package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>shade</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -52,6 +35,26 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+<!--            <plugin>-->
+<!--                <groupId>org.projectlombok</groupId>-->
+<!--                <artifactId>lombok-maven-plugin</artifactId>-->
+<!--                <version>1.18.20.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>generate-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>delombok</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <encoding>UTF-8</encoding>-->
+<!--                            <sourceDirectory>src/main/java</sourceDirectory>-->
+<!--                            <outputDirectory>${project.build.directory}/generated-sources/delombok</outputDirectory>-->
+<!--                            <addOutputDirectory>false</addOutputDirectory>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
@@ -135,7 +138,8 @@
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
-                <version>1.18.10</version>
+                <version>1.18.24</version>
+                <scope>provided</scope>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/org.apache.calcite/calcite-core -->
