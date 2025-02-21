@@ -1,13 +1,10 @@
 package util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
 import java.security.Security;
 import java.security.Key;
+import java.util.Base64;
 
 /**
  * className: AES256Utils
@@ -68,7 +65,7 @@ public class AES256Utils {
         cipher.init(Cipher.ENCRYPT_MODE, k);
         // 执行操作
         byte[] encrypted = cipher.doFinal(data.getBytes());
-        String enc = new BASE64Encoder().encode(encrypted);
+        String enc = Base64.getEncoder().encodeToString(encrypted);
         return enc;
     }
 
@@ -90,7 +87,7 @@ public class AES256Utils {
         Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         // 初始化，设置为解密模式
         cipher.init(Cipher.DECRYPT_MODE, k);
-        byte[] encrypted1 = new BASE64Decoder().decodeBuffer(data);
+        byte[] encrypted1 = Base64.getDecoder().decode(data);
 
         // 执行操作
         byte[] original = cipher.doFinal(encrypted1);
