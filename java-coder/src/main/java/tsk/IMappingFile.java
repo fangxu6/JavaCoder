@@ -1,28 +1,13 @@
 package tsk;
 
-import java.util.Map;
+import java.io.IOException;
 
-/**
- * className: IMappingFile
- * package: tsk
- * Description:
- *
- * @author fangxu6@gmail.com
- * @since 2025/7/24 20:38
- */
-// 映射文件接口（对应IMappingFile）
-public interface IMappingFile  {
-    String getFileName();
-    void setFileName(String fileName);
-    String getFileType();
-    Map<String, Object> getProperties();
+public interface IMappingFile extends IConverter {
     DieMatrix getDieMatrix();
-    DieMatrix setDieMatrix();
-    void setDieMatrix(DieMatrix dieMatrix);
-    void read();
-    void save();
-    void deasilRotate(int degrees);
+    String getWaferID();
+    void setWaferID(String waferID);
+    String getLotNo();
+    void setLotNo(String lotNo);
+    boolean isEmptyDie(DieData die);
+    IMappingFile merge(IMappingFile map, String newfile) throws Exception;
 }
-
-
-
